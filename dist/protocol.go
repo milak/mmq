@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/milak/event"
+	"github.com/milak/tools/event"
 	"io"
 	"log"
-	"mmq/conf"
-	"mmq/env"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
 	"net"
 	"strconv"
 	"time"
@@ -144,7 +144,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 					aCloser.Close()
 				}
 				this.logger.Println("INFO Lost connection with",aInstance.Name(),err)
-				event.EventBus.FireEvent(&InstanceDisconnected{Instance : aInstance})
+				event.Bus.FireEvent(&InstanceDisconnected{Instance : aInstance})
 				break
 			}
 			buffer = buffer[0:count]
@@ -180,7 +180,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 			for _,newInstance := range newInstances {
 				//this.logger.Println("DEBUG Received instance :",newInstance)
 				newInstance.Connected = false // ensure the Instance will not be considered as connected
-				event.EventBus.FireEvent(&InstanceReceived{Instance : newInstance, From : aInstance})
+				event.Bus.FireEvent(&InstanceReceived{Instance : newInstance, From : aInstance})
 			}
 		} else if command == "TOPICS" { // Receive topic list
 			var distributedTopics []*conf.Topic
@@ -189,7 +189,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 			decoder.Decode(&distributedTopics)
 			for _,topic := range distributedTopics {
 				this.logger.Println("DEBUG Received topic :",topic)
-				event.EventBus.FireEvent(&TopicReceived{Topic : topic, From : aInstance})
+				event.Bus.FireEvent(&TopicReceived{Topic : topic, From : aInstance})
 			}
 		} else if command == "ITEM" { // Receive item
 			var item *SharedItem
@@ -197,7 +197,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 			decoder := json.NewDecoder(byteBuffer)
 			decoder.Decode(&item)
 			//this.logger.Println("DEBUG Received item :",item)
-			event.EventBus.FireEvent(&ItemReceived{Item : item, From : aInstance})
+			event.Bus.FireEvent(&ItemReceived{Item : item, From : aInstance})
 		} else if command == "ITEM-CONTENT" { // Receive item
 			this.logger.Println("DEBUG Received item content :",string(arguments))
 			var i = 0
@@ -207,9 +207,9 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 			id := string(arguments[0:i])
 			content := arguments[i+1:]
 			this.logger.Println("DEBUG Received item content : id = ",id," content = ",string(content))
-			event.EventBus.FireEvent(&ItemContentReceived{ID : id, Content : content, From : aInstance})
+			event.Bus.FireEvent(&ItemContentReceived{ID : id, Content : content, From : aInstance})
 		} else if command == "ITEM-REMOVE" { // Remove item
-			event.EventBus.FireEvent(&ItemRemoved{ID : string(arguments), From : aInstance})
+			event.Bus.FireEvent(&ItemRemoved{ID : string(arguments), From : aInstance})
 		} else if command == "ERROR" {
 			this.logger.Println("WARNING Received ERROR :",arguments)
 		} else {
@@ -286,7 +286,7 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 	instance.Groups = info.Groups
 	instance.Connected = true
 	//this.logger.Println("Adding caller as new instance",instance)
-	event.EventBus.FireEvent(&InstanceReceived{Instance : instance, From : nil})
+	event.Bus.FireEvent(&InstanceReceived{Instance : instance, From : nil})
 	for len(remain) > 0 {
 		command, arguments, remain, needMore = this._splitCommand(remain)
 		this.logger.Println("DEBUG Received command " + command,arguments,remain,needMore)

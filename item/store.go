@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/milak/event"
-	"github.com/milak/list"
+	"github.com/milak/tools/event"
+	"github.com/milak/tools/list"
 	"io"
-	"mmq/conf"
-	"mmq/env"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
 	"strconv"
 )
 
@@ -107,7 +107,7 @@ func (this *ItemStore) _addItemInTopic(aItem *Item, aTopic *conf.Topic, aFireEve
 	}
 	this.itemsByTopic[topicName].AddInTail(aItem)
 	if aFireEvent {
-		event.EventBus.FireEvent(&ItemAdded{aItem, aTopic})
+		event.Bus.FireEvent(&ItemAdded{aItem, aTopic})
 	}
 	MaxItemCountString := aTopic.GetParameterByName(conf.PARAMETER_MAX_ITEM_COUNT)
 	if MaxItemCountString != "" && MaxItemCountString != "unlimited" {
@@ -170,7 +170,7 @@ func (this *ItemStore) Pop(aTopicName string) (*Item, io.Reader, error) {
 			return nil, nil, nil
 		} else {
 			item := items.PopHead()
-			event.EventBus.FireEvent(&ItemRemoved{item, topic})
+			event.Bus.FireEvent(&ItemRemoved{item, topic})
 			content, _ := this.GetContent(item.ID, true)
 			return item, content, nil
 		}
@@ -190,7 +190,7 @@ func (this *ItemStore) Pop(aTopicName string) (*Item, io.Reader, error) {
 				items := this.itemsByTopic[subTopicName]
 				if !items.IsEmpty() {
 					item := items.PopHead()
-					event.EventBus.FireEvent(&ItemRemoved{item, subTopic})
+					event.Bus.FireEvent(&ItemRemoved{item, subTopic})
 					content, _ := this.GetContent(item.ID, true)
 					return item, content, nil
 				}
@@ -227,7 +227,7 @@ func (this *ItemStore) RemoveItem(aTopicName string, aItem *Item) error {
 		item := itemI.(*Item)
 		if item.ID == aItem.ID {
 			items.Remove(node)
-			event.EventBus.FireEvent(&ItemRemoved{item, topic})
+			event.Bus.FireEvent(&ItemRemoved{item, topic})
 			// TODO determine if i have to remove item (cause can be in other topics
 			this.RemoveContent(aItem.ID)
 			return nil

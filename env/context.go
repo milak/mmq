@@ -2,8 +2,8 @@ package env
 
 import (
 	"log"
-	"mmq/conf"
-	"github.com/milak/network"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/tools/network"
 	"os"
 )
 const DATE_FORMAT string = "Mon, 02 Jan 2006 15:04:05 MST"

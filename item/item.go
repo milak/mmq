@@ -4,7 +4,7 @@ import (
 	"io"
 	"math"
 	"time"
-	"mmq/env"
+	"github.com/milak/mmq/env"
 	"github.com/google/uuid"
 )
 

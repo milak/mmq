@@ -3,7 +3,7 @@ package dist
  * This Service listens on SYNC PORT. Each call established emplies a call to Protocol class to process the exchange.
  */
 import (
-	"mmq/env"
+	"github.com/milak/mmq/env"
 	"log"
 	"net"
 )

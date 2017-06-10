@@ -1,7 +1,7 @@
 package item
 
 import (
-	"github.com/milak/list"
+	"github.com/milak/tools/list"
 )
 
 type Iterator struct {

@@ -3,11 +3,11 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/milak/event"
+	"github.com/milak/tools/event"
 	"io"
-	"mmq/conf"
-	"mmq/env"
-	"mmq/item"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
+	"github.com/milak/mmq/item"
 	"net/http"
 	"os"
 	"strings"
@@ -389,7 +389,7 @@ func (this *HttpService) instanceListener(w http.ResponseWriter, req *http.Reque
 		if removedInstance == nil {
 			this.notFound(w)
 		} else {
-			event.EventBus.FireEvent(&conf.InstanceRemoved{removedInstance})
+			event.Bus.FireEvent(&conf.InstanceRemoved{removedInstance})
 			w.WriteHeader(http.StatusOK)
 		}
 	}

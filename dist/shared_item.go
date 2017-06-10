@@ -1,7 +1,7 @@
 package dist
 
 import (
-	"mmq/item"
+	"github.com/milak/mmq/item"
 )
 
 type SharedItem struct {

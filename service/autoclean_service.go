@@ -1,9 +1,9 @@
 package service
 
 import (
-	"mmq/conf"
-	"mmq/env"
-	"mmq/item"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
+	"github.com/milak/mmq/item"
 	"time"
 )
 /**

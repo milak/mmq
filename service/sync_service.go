@@ -2,10 +2,10 @@ package service
 
 import (
 	"log"
-	"mmq/conf"
-	"mmq/env"
-	"mmq/dist"
-	"github.com/milak/event"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
+	"github.com/milak/mmq/dist"
+	"github.com/milak/tools/event"
 //	"reflect"
 	"time"
 )
@@ -29,7 +29,7 @@ type SyncService struct {
  */
 func NewSyncService (aContext *env.Context, aInstancePool *dist.InstancePool) *SyncService {
 	result := &SyncService{running : true, context : aContext, logger : aContext.Logger, pool : aInstancePool}
-	event.EventBus.AddListener(result)
+	event.Bus.AddListener(result)
 	return result
 }
 func (this *SyncService) Start (){

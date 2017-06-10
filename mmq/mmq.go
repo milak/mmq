@@ -3,11 +3,11 @@ package main
 import (
     "flag"
     "fmt"
-    "mmq/env"
-    "mmq/conf"
-    "mmq/service"
-    "mmq/item"
-    "mmq/dist"
+    "github.com/milak/mmq/env"
+    "github.com/milak/mmq/conf"
+    "github.com/milak/mmq/service"
+    "github.com/milak/mmq/item"
+    "github.com/milak/mmq/dist"
     "strings"
     "time"
 )

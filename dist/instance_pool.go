@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"io"
 	"log"
-	"mmq/conf"
-	"mmq/env"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/env"
 	"net"
 )
 /**

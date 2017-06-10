@@ -1,14 +1,14 @@
 package service
 
 import (
-	"github.com/milak/event"
-	"github.com/milak/math"
+	"github.com/milak/tools/event"
+	"github.com/milak/tools/math"
 	"log"
 	"math/rand"
-	"mmq/conf"
-	"mmq/dist"
-	"mmq/env"
-	"mmq/item"
+	"github.com/milak/mmq/conf"
+	"github.com/milak/mmq/dist"
+	"github.com/milak/mmq/env"
+	"github.com/milak/mmq/item"
 	"strconv"
 	"strings"
 	"time"
@@ -345,9 +345,9 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 	}
 }
 func (this *DistributedItemService) Start() {
-	event.EventBus.AddListener(this)
+	event.Bus.AddListener(this)
 	go this._distribute()
 }
 func (this *DistributedItemService) Stop() {
-	event.EventBus.RemoveListener(this)
+	event.Bus.RemoveListener(this)
 }
