@@ -1,4 +1,4 @@
-// The environnement passed to every service of mmq system//
+// The environnement passed to every service of mmq system.
 // It contains : 
 //   * the configuration
 //   * MMQ system informations (Host, Name, etc.)
