@@ -131,7 +131,7 @@ func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
 			this.context.Logger.Println("ERROR i have not the content for a owned item ", id)
 			w.WriteHeader(http.StatusInternalServerError)
 		} else {
-			this.writeItem(w, item, reader)
+			_writeItem(w, item, reader)
 		}
 	}
 }
@@ -193,7 +193,7 @@ func (this *_item) Post(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 	}
 }
-func (this *_item) writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
+func _writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
 	w.Header().Add("id", aItem.ID)
 	properties := "["
 	for i, p := range aItem.Properties {
@@ -253,7 +253,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 		} else if item == nil {
 			_notFound(w)
 		} else {
-			this.writeItem(w, item, reader)
+			_writeItem(w, item, reader)
 		}
 	} else if strings.HasSuffix(topicName, "/list") {
 		topicName = topicName[1 : len(topicName)-len("/list")]
