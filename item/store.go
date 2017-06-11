@@ -188,7 +188,7 @@ func (this *ItemStore) Pop(aTopicName string) (*Item, io.Reader, error) {
 					return nil, nil, StoreError{"Topic not found", subTopicName, "nil"}
 				}
 				items := this.itemsByTopic[subTopicName]
-				if !items.IsEmpty() {
+				if items != nil && !items.IsEmpty() {
 					item := items.PopHead()
 					event.Bus.FireEvent(&ItemRemoved{item, subTopic})
 					content, _ := this.GetContent(item.ID, true)
