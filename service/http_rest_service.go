@@ -230,7 +230,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	topicName := req.URL.Path
 	topicName = topicName[len("/topic"):]
-	if len(topic) == 0 {
+	if len(topicName) == 0 {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		req.ParseForm()
 		callback := req.Form["callback"]
