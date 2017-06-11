@@ -143,7 +143,7 @@ func (this *HttpService) itemListener(w http.ResponseWriter, req *http.Request) 
 	}
 }
 
-type DisplayableItem struct {
+type _DisplayableItem struct {
 	ID         string
 	Age        time.Duration
 	Properties []item.Property
