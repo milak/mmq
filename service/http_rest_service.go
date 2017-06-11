@@ -67,7 +67,7 @@ type _log struct {
 func (this *_log) Get(w http.ResponseWriter, req *http.Request) {
 	file, err := os.Open("mmq.log")
 	if err != nil {
-		notFound(w)
+		_notFound(w)
 		this.context.Logger.Println("WARNING Unable to open log file", err)
 	} else {
 		w.WriteHeader(http.StatusOK)
