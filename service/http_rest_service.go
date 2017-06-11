@@ -224,6 +224,7 @@ func (this *_item) writeItem(w http.ResponseWriter, aItem *item.Item, aReader io
 
 type topic struct {
 	context *env.Context
+	store *item.ItemStore
 }
 
 func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
@@ -504,7 +505,7 @@ func (this *HttpRestService) Start() {
 	if port != nil {
 		this.port = *port
 		objectMap := make(map[string]interface{})
-		objectMap["topic"] = &topic{context : this.context}
+		objectMap["topic"] = &topic{context : this.context, store : this.store}
 		objectMap["item"] = &_item{context : this.context, store : this.store}
 		objectMap["info"] = &info{context : this.context, port : this.port}
 		objectMap["log"] = &_log{context : this.context}
