@@ -13,6 +13,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"fmt"
 )
 
 type instance struct {
@@ -501,13 +502,14 @@ func (this *HttpRestService) Start() {
 	if port != nil {
 		this.port = *port
 		objectMap := make(map[string]interface{})
-		objectMap["topic"] = &topic{}
-		objectMap["item"] = &item{}
-		objectMap["info"] = &info{}
-		objectMap["log"] = &log{}
-		objectMap["service"] = &service{}
-		objectMap["shutdown"] = &shutdown{}
+		objectMap["topic"] = &topic{context : this.context}
+		objectMap["item"] = &item{context : this.context}
+		objectMap["info"] = &info{context : this.context}
+		objectMap["log"] = &log{context : this.context}
+		objectMap["service"] = &service{context : this.context}
+		objectMap["shutdown"] = &shutdown{context : this.context}
 		go network.Listen("/",port,objectMap)
+		fmt.Println("Starting REST API on port " + this.port)
 		/*http.HandleFunc("/instance", this.instanceListListener)
 		http.HandleFunc("/instance/", this.instanceListener)
 		http.HandleFunc("/topic", this.topicListListener)
