@@ -447,7 +447,7 @@ type HttpRestService struct {
 }
 
 func NewHttpRestService(aContext *env.Context, aStore *item.ItemStore) *HttpService {
-	return &HttpService{context: aContext, store: aStore}
+	return &HttpRestService{context: aContext, store: aStore}
 }
 func _notFound(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusNotFound)
