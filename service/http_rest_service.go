@@ -113,7 +113,7 @@ func (this *info) Get(w http.ResponseWriter, req *http.Request) {
 
 type _item struct {
 	context *env.Context
-	store *item.Store
+	store *item.ItemStore
 }
 
 func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
