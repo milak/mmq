@@ -32,7 +32,7 @@ func (this *instance) Delete(w http.ResponseWriter, req *http.Request) {
 	instanceName = instanceName[len("/instance/"):]
 	removedInstance := this.context.Configuration.RemoveInstance(instanceName)
 	if removedInstance == nil {
-		this.notFound(w)
+		_notFound(w)
 	} else {
 		event.Bus.FireEvent(&conf.InstanceRemoved{removedInstance})
 		w.WriteHeader(http.StatusOK)
@@ -122,7 +122,7 @@ func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
 	this.context.Logger.Println("DEBUG getting content of item ", id)
 	item := this.store.GetItem(id)
 	if item == nil {
-		this.notFound(w)
+		_notFound(w)
 	} else {
 		reader, err := this.store.GetContent(id, false)
 		if err != nil {
@@ -248,7 +248,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(err.Error()))
 		} else if item == nil {
-			this.notFound(w)
+			_notFound(w)
 		} else {
 			this.writeItem(w, item, reader)
 		}
@@ -345,7 +345,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 	} else {
 		topic := this.context.Configuration.GetTopic(topicName[1:])
 		if topic == nil {
-			this.notFound(w)
+			_notFound(w)
 		} else {
 			req.ParseForm()
 			w.WriteHeader(http.StatusOK)
@@ -367,7 +367,7 @@ func (this *topic) Delete(w http.ResponseWriter, req *http.Request) {
 	topicName := req.URL.Path
 	topicName = topicName[len("/topic/"):]
 	if !this.context.Configuration.RemoveTopic(topicName) {
-		this.notFound(w)
+		_notFound(w)
 	} else {
 		w.WriteHeader(http.StatusOK)
 	}
@@ -446,7 +446,7 @@ type HttpRestService struct {
 func NewHttpRestService(aContext *env.Context, aStore *item.ItemStore) *HttpService {
 	return &HttpService{context: aContext, store: aStore}
 }
-func (this *HttpRestService) notFound(w http.ResponseWriter) {
+func _notFound(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusNotFound)
 	w.Write([]byte("Sorry the page you requested is not found"))
 }
