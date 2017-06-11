@@ -87,6 +87,7 @@ func (this *_log) Get(w http.ResponseWriter, req *http.Request) {
 
 type info struct {
 	context *env.Context
+	port string
 }
 
 func (this *info) Get(w http.ResponseWriter, req *http.Request) {
@@ -112,6 +113,7 @@ func (this *info) Get(w http.ResponseWriter, req *http.Request) {
 
 type _item struct {
 	context *env.Context
+	store *item.Store
 }
 
 func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
@@ -503,8 +505,8 @@ func (this *HttpRestService) Start() {
 		this.port = *port
 		objectMap := make(map[string]interface{})
 		objectMap["topic"] = &topic{context : this.context}
-		objectMap["item"] = &_item{context : this.context}
-		objectMap["info"] = &info{context : this.context}
+		objectMap["item"] = &_item{context : this.context, store : this.store}
+		objectMap["info"] = &info{context : this.context, port : this.port}
 		objectMap["log"] = &_log{context : this.context}
 		objectMap["service"] = &service{context : this.context}
 		objectMap["shutdown"] = &shutdown{context : this.context}
