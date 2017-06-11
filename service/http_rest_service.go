@@ -110,11 +110,11 @@ func (this *info) Get(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-type item struct {
+type _item struct {
 	context *env.Context
 }
 
-func (this *item) Get(w http.ResponseWriter, req *http.Request) {
+func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
 	this.context.Logger.Println("DEBUG entering item REST API", req)
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	id := req.URL.Path
@@ -133,10 +133,10 @@ func (this *item) Get(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 }
-func (this *item) Put(w http.ResponseWriter, req *http.Request) {
+func (this *_item) Put(w http.ResponseWriter, req *http.Request) {
 	this.Post(w, req)
 }
-func (this *item) Post(w http.ResponseWriter, req *http.Request) {
+func (this *_item) Post(w http.ResponseWriter, req *http.Request) {
 	//req.ParseForm()
 	multipart := true
 	erro := req.ParseMultipartForm(http.DefaultMaxHeaderBytes)
@@ -191,7 +191,7 @@ func (this *item) Post(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 	}
 }
-func (this *item) writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
+func (this *_item) writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
 	w.Header().Add("id", aItem.ID)
 	properties := "["
 	for i, p := range aItem.Properties {
@@ -503,7 +503,7 @@ func (this *HttpRestService) Start() {
 		this.port = *port
 		objectMap := make(map[string]interface{})
 		objectMap["topic"] = &topic{context : this.context}
-		objectMap["item"] = &item{context : this.context}
+		objectMap["item"] = &_item{context : this.context}
 		objectMap["info"] = &info{context : this.context}
 		objectMap["log"] = &_log{context : this.context}
 		objectMap["service"] = &service{context : this.context}
