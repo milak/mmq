@@ -57,7 +57,7 @@ func main() {
     	}
     }
     context := env.NewContext(configuration)
-    fmt.Println("Starting MagicMQ on "+context.Host+"...")
+    fmt.Println("Starting MMQ on "+context.Host+"...")
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
@@ -67,9 +67,9 @@ func main() {
     
     services := createServices(context,store,pool)
     startServices(services)
-    fmt.Println("MagicMQ started")
+    fmt.Println("MMQ started")
     for context.Running {
     	time.Sleep(1000 * time.Millisecond)
     }
-    fmt.Println("MagicMQ stopped")
+    fmt.Println("MMQ stopped")
 }
