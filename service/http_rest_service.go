@@ -60,11 +60,11 @@ func (this *service) Get(w http.ResponseWriter, req *http.Request) {
 	encoder.Encode(this.context.Configuration.Services)
 }
 
-type log struct {
+type _log struct {
 	context *env.Context
 }
 
-func (this *log) Get(w http.ResponseWriter, req *http.Request) {
+func (this *_log) Get(w http.ResponseWriter, req *http.Request) {
 	file, err := os.Open("mmq.log")
 	if err != nil {
 		notFound(w)
@@ -505,7 +505,7 @@ func (this *HttpRestService) Start() {
 		objectMap["topic"] = &topic{context : this.context}
 		objectMap["item"] = &item{context : this.context}
 		objectMap["info"] = &info{context : this.context}
-		objectMap["log"] = &log{context : this.context}
+		objectMap["log"] = &_log{context : this.context}
 		objectMap["service"] = &service{context : this.context}
 		objectMap["shutdown"] = &shutdown{context : this.context}
 		go network.Listen("/",port,objectMap)
