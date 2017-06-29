@@ -230,7 +230,7 @@ type topic struct {
 func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	topicName := req.URL.Path
-	topicName = topicName[len("/topic"):]
+	topicName = topicName[len("/API/topic"):]
 	if len(topicName) == 0 {
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		req.ParseForm()
@@ -511,7 +511,7 @@ func (this *HttpRestService) Start() {
 		objectMap["log"] = &_log{context : this.context}
 		objectMap["service"] = &service{context : this.context}
 		objectMap["shutdown"] = &shutdown{context : this.context}
-		go network.Listen("/API/",this.port,objectMap)
+		go network.Listen("/API",this.port,objectMap)
 		fmt.Println("Starting REST API on port " + this.port)
 		/*http.HandleFunc("/instance", this.instanceListListener)
 		http.HandleFunc("/instance/", this.instanceListener)
