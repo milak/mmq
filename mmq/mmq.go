@@ -19,7 +19,8 @@ var configurationFileName *string = flag.String("f", "configuration.json", "The 
 func createServices(context *env.Context, store *item.ItemStore, pool *dist.InstancePool) []service.Service {
 	result := []service.Service{}
 	result = append(result,service.NewDistributedItemService(context,pool,store))
-	result = append(result,service.NewHttpRestService(context,store))
+	//result = append(result,service.NewHttpRestService(context,store))
+	result = append(result,service.NewHttpService(context,store))
 	result = append(result,service.NewSyncService(context,pool))
 	result = append(result,dist.NewListener(context,pool))
 	result = append(result,service.NewAutoCleanService(context,store))
