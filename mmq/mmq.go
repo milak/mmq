@@ -35,7 +35,7 @@ func main() {
 	
 	flag.Parse() // Scan the arguments list
 	linkOptionAsString := (*linkOption)
-	configuration,created := conf.InitConfiguration(*configurationFileName)
+	configuration,_ := conf.InitConfiguration(*configurationFileName)
     if linkOptionAsString != "" {
     	fmt.Println("Linking to master ",linkOptionAsString)
     	var host, port string
