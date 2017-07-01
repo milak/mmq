@@ -139,7 +139,7 @@ func InitConfiguration(aFileName string) (*Configuration,bool) {
 		service.Comment = "This service opens web administration. It requires REST service. Parameter : 'root' directory containing admin web files. Can be replaced by apache httpd."
 		result.AddService(service)
 		// Add REST_SERVICE
-		service = NewService(SERVICE_REST,true,[]Parameter{*NewParameter(PARAMETER_PORT,"8080")})
+		service = NewService(SERVICE_REST,true,[]Parameter{*NewParameter(PARAMETER_PORT,"80")})
 		service.Comment = "This service opens REST API. Parameter : 'port' the listening port."
 		result.AddService(service)
 		// Add SYNC_SERVICE
