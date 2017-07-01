@@ -508,6 +508,7 @@ func (this *HttpRestService) Start() {
 		objectMap["topic"] = &topic{context : this.context, store : this.store}
 		objectMap["item"] = &_item{context : this.context, store : this.store}
 		objectMap["info"] = &info{context : this.context, port : this.port}
+		objectMap["instance"] = &instance{context : this.context}
 		objectMap["log"] = &_log{context : this.context}
 		objectMap["service"] = &service{context : this.context}
 		objectMap["shutdown"] = &shutdown{context : this.context}
