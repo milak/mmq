@@ -46,6 +46,7 @@ type shutdown struct {
 func (this *shutdown) Get(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	this.context.Running = false
+	w.Write([]byte("server shutdown"))
 	//http.DefaultServeMux.Shutdown()
 }
 
