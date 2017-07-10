@@ -37,7 +37,7 @@ func (this *instance) Get(w http.ResponseWriter, req *http.Request) {
 func (this *instance) Delete(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	instanceName := req.URL.Path
-	instanceName = instanceName[len("/instance/"):]
+	instanceName = instanceName[len("/API/instance/"):]
 	removedInstance := this.context.Configuration.RemoveInstance(instanceName)
 	if removedInstance == nil {
 		_notFound(w)
@@ -129,7 +129,7 @@ func (this *_item) Get(w http.ResponseWriter, req *http.Request) {
 	this.context.Logger.Println("DEBUG entering item REST API", req)
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	id := req.URL.Path
-	id = id[len("/item/"):]
+	id = id[len("/API/item/"):]
 	this.context.Logger.Println("DEBUG getting content of item ", id)
 	item := this.store.GetItem(id)
 	if item == nil {
@@ -410,7 +410,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 func (this *topic) Delete(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	topicName := req.URL.Path
-	topicName = topicName[len("/topic/"):]
+	topicName = topicName[len("/API/topic/"):]
 	if !this.context.Configuration.RemoveTopic(topicName) {
 		_notFound(w)
 	} else {
