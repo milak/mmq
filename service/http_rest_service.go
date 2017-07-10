@@ -256,7 +256,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 	} else if topicName == "topics.opml" {
 		rootUrl := "http://" + req.Host + "/"
 		w.WriteHeader(http.StatusOK)
-		w.Header().Set("content-type", "text/xml")
+		w.Header().Set("content-type", "text/x-opml")
 		w.Write([]byte("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<opml version=\"2.0\">\n"))
 		w.Write([]byte("<head>\n<title>MMQ topic.opml</title>\n"))
 		w.Write([]byte("<dateCreated>"+time.Now().Format(env.DATE_FORMAT)+"</dateCreated>\n"))
