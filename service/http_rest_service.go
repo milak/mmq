@@ -22,6 +22,7 @@ type instance struct {
 
 func (this *instance) Get(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
+	req.ParseForm()
 	callback := req.Form["callback"]
 	w.WriteHeader(http.StatusOK)
 	if callback != nil {
