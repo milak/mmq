@@ -253,7 +253,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 		if callback != nil {
 			w.Write([]byte(")"))
 		}
-	} else if topicName == "topics.opml" {
+	} else if topicName == "/topics.opml" {
 		rootUrl := "http://" + req.Host + "/"
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("content-type", "text/x-opml")
