@@ -253,6 +253,39 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 		if callback != nil {
 			w.Write([]byte(")"))
 		}
+	} else if topicName == "topics.opml" {
+		rootUrl := "http://" + req.Host + "/"
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("content-type", "text/xml")
+		w.Write([]byte("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<opml version=\"2.0\">\n"))
+		w.Write([]byte("<head>\n<title>MMQ topic.opml</title>\n"))
+		w.Write([]byte("<dateCreated>"+time.Now().Format(env.DATE_FORMAT)+"</dateCreated>\n"))
+		w.Write([]byte("<dateModified>"+time.Now().Format(env.DATE_FORMAT)+"</dateModified>\n"))
+		w.Write([]byte("<ownerName>User</ownerName>\n"))
+		w.Write([]byte("<ownerEmail>User@mailbox.com</ownerEmail>\n"))
+		//w.Write([]byte("<expansionState></expansionState>\n"))
+		//w.Write([]byte("<vertScrollState>1</vertScrollState>
+		//<windowTop>61</windowTop>
+		//<windowLeft>304</windowLeft>
+		//<windowBottom>562</windowBottom>
+		//<windowRight>842</windowRight>
+		w.Write([]byte("</head>\n"))
+		w.Write([]byte("<body>\n"))
+		for _,topic := range this.context.Configuration.Topics {
+			w.Write([]byte("<outline"))
+			w.Write([]byte(" text       =\""+topic.Name+"\""))
+			w.Write([]byte(" description=\""+topic.Name+"\""))
+			w.Write([]byte(" htmlUrl    =\""+rootUrl+"\""))
+			w.Write([]byte(" title      =\"Topic : "+topic.Name+"\""))
+			w.Write([]byte(" language   =\"english\""))
+			w.Write([]byte(" title      =\""+topic.Name+"\""))
+			w.Write([]byte(" type       =\"rss\""))
+			w.Write([]byte(" version    =\"RSS2\""))
+			w.Write([]byte(" xmlUrl     =\""+rootUrl+"/API/topic/"+topic.Name+"/rss\""))
+			w.Write([]byte("/>"))
+		}
+		w.Write([]byte("</body>\n"))
+		w.Write([]byte("</opml>"))
 	} else if strings.HasSuffix(topicName, "/pop") {
 		topicName = topicName[1 : len(topicName)-len("/pop")]
 		item, reader, err := this.store.Pop(topicName)
