@@ -31,7 +31,7 @@ func (this *instance) Get(w http.ResponseWriter, req *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(this.context.Configuration.Instances)
 	if callback != nil {
-		w.Write([]byte("}"))
+		w.Write([]byte(")"))
 	}
 }
 func (this *instance) Delete(w http.ResponseWriter, req *http.Request) {
