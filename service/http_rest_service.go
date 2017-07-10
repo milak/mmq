@@ -22,9 +22,16 @@ type instance struct {
 
 func (this *instance) Get(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
+	callback := req.Form["callback"]
 	w.WriteHeader(http.StatusOK)
+	if callback != nil {
+		w.Write([]byte(callback[0] + "("))
+	}
 	encoder := json.NewEncoder(w)
 	encoder.Encode(this.context.Configuration.Instances)
+	if callback != nil {
+		w.Write([]byte("}"))
+	}
 }
 func (this *instance) Delete(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
