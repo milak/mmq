@@ -406,7 +406,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte("<link href=\""+rootUrl+"\"/>\n"))
 		w.Write([]byte("<updated>"+time.Now().Format(env.DATE_FORMAT)+"</updated>"))
 		w.Write([]byte("<author>\n<name>MMQ</name>\n</author>\n"))
-		w.Write([]byte("<id>urn:uuid:"+uuid.New().String()+"</id>
+		w.Write([]byte("<id>urn:uuid:"+uuid.New().String()+"</id>"))
 		index := 0
 		for iterator.HasNext() {
 			item, _ := iterator.Next().(*item.Item)
