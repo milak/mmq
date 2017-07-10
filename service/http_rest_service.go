@@ -351,7 +351,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 			item, _ := iterator.Next().(*item.Item)
 			w.Write([]byte("<item>\n"))
 			w.Write([]byte("<title>Item #" + item.ID + "</title>\n"))
-			w.Write([]byte("<link>" + rootUrl + "item/" + item.ID + "</link>\n"))
+			w.Write([]byte("<link>" + rootUrl + "API/item/" + item.ID + "</link>\n"))
 			description := "Item stored "
 			topicList := ""
 			for i, topic := range item.Topics {
@@ -365,16 +365,16 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 			} else {
 				description += "in the topic : " + topicList
 			}
-			description += " since " + item.CreationDate.Format(env.DATE_FORMAT)
+			description += "\nSince " + item.CreationDate.Format(env.DATE_FORMAT)
 			if len(item.Properties) > 0 {
 				properties := ""
 				for i, property := range item.Properties {
 					if i > 0 {
 						topicList += ", "
 					}
-					properties += property.Name + " = " + property.Value
+					properties += property.Name + " = " + property.Value + "\n"
 				}
-				description += " with properties : " + properties
+				description += "Properties : \n" + properties
 			}
 			w.Write([]byte("<description>" + description + "</description>\n"))
 			w.Write([]byte("<pubDate>" + item.CreationDate.Format(env.DATE_FORMAT) + "</pubDate>\n"))
