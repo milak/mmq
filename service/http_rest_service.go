@@ -8,6 +8,7 @@ import (
 	"github.com/milak/mmq/item"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/network"
+	"github.com/google/uuid"
 	"io"
 	"net/http"
 	"os"
@@ -387,6 +388,65 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 		}
 		w.Write([]byte("</channel>\n"))
 		w.Write([]byte("</rss>\n"))
+	} else if strings.HasSuffix(topicName, "/atom") {
+		rootUrl := "http://" + req.Host + "/"
+		topicName = topicName[1 : len(topicName)-len("/atom")]
+		iterator, err := this.store.List(topicName)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Error during list " + err.Error()))
+			this.context.Logger.Println("ERROR items list", err)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("content-type", "application/atom+xml")
+		w.Write([]byte("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"))
+	    w.Write([]byte("<feed xmlns=\"http://www.w3.org/2005/Atom\">\n"))
+		w.Write([]byte("<title>MMQ feed</title>\n"))
+		w.Write([]byte("<link href=\""+rootUrl+"\"/>\n"))
+		w.Write([]byte("<updated>"+time.Now().Format(env.DATE_FORMAT)+"</updated>"))
+		w.Write([]byte("<author>\n<name>MMQ</name>\n</author>\n"))
+		w.Write([]byte("<id>urn:uuid:"+uuid.New().String()+"</id>
+		index := 0
+		for iterator.HasNext() {
+			item, _ := iterator.Next().(*item.Item)
+			w.Write([]byte("<entry>\n"))
+			w.Write([]byte("<title>Item #" + item.ID + "</title>\n"))
+			w.Write([]byte("<link href=\"" + rootUrl + "API/item/" + item.ID + "\"/>\n"))
+			w.Write([]byte("<id>urn:uuid:"+item.ID+"</id>"))
+			w.Write([]byte("<updated>"+item.CreationDate.Format(env.DATE_FORMAT)+"</updated>"))
+			description := "Item stored "
+			topicList := ""
+			for i, topic := range item.Topics {
+				if i > 0 {
+					topicList += ", "
+				}
+				topicList += topic
+			}
+			if len(item.Topics) > 1 {
+				description += "in the topics : " + topicList
+			} else {
+				description += "in the topic : " + topicList
+			}
+			description += "\nSince " + item.CreationDate.Format(env.DATE_FORMAT)
+			if len(item.Properties) > 0 {
+				properties := ""
+				for i, property := range item.Properties {
+					if i > 0 {
+						topicList += ", "
+					}
+					properties += property.Name + " = " + property.Value + "\n"
+				}
+				description += "Properties : \n" + properties
+			}
+			w.Write([]byte("<summary>" + description + "</summary>\n"))
+			w.Write([]byte("</entry>\n"))
+			index++
+			if index == 10 {
+				break
+			}
+		}
+		w.Write([]byte("</feed>\n"))
 	} else {
 		topic := this.context.Configuration.GetTopic(topicName[1:])
 		if topic == nil {
