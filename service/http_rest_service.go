@@ -280,7 +280,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 			w.Write([]byte(" title=\"Topic : "+topic.Name+"\""))
 			w.Write([]byte(" language=\"english\""))
 			w.Write([]byte(" type=\"atom\""))   //w.Write([]byte(" type=\"rss\""))
-			w.Write([]byte(" version=\"ATOM\""))//w.Write([]byte(" version=\"RSS2\""))
+			w.Write([]byte(" version=\"ATOM1\""))//w.Write([]byte(" version=\"RSS2\""))
 			w.Write([]byte(" xmlUrl=\""+rootUrl+"/API/topic/"+topic.Name+"/atom\""))
 			w.Write([]byte("/>"))
 		}
