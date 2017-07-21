@@ -34,23 +34,26 @@ func startServices(services []service.Service){
 	}
 }
 func loadPlugins(){
+	fmt.Println("Loading plugins")
 	// Browse plugin directory
 	pluginDirectory,err := os.Open("plugins")
 	if err != nil {
+		fmt.Println("No plugin directory")
 		// no plugins directory
 		return
 	}
 	info, err := pluginDirectory.Stat()
 	if !info.IsDir() {
+		fmt.Println("Plugin directory is not a directory")
 		// plugins is not a directory 
 		return
 	}
 	files,err := pluginDirectory.Readdir(0)
 	if err != nil {
-		fmt.Println("Unable to browse plugins directory")
+		fmt.Println("Unable to browse plugins directory",err)
 		return
 	}
-	fmt.Println("Loading plugin",file.Name(),"...")
+	fmt.Println("Loading plugin")
 	for _,file := range files {
 		fmt.Println("Loading plugin",file.Name(),"...")
 		p, err := plugin.Open(file.Name())
