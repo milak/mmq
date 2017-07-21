@@ -3,6 +3,7 @@ package main
 import (
     "flag"
     "fmt"
+    "os"
     "github.com/milak/mmq/env"
     "github.com/milak/mmq/conf"
     "github.com/milak/mmq/service"
@@ -10,6 +11,7 @@ import (
     "github.com/milak/mmq/dist"
     "strings"
     "time"
+    "plugin"
 )
 
 // The flag package provides a default help printer via -h switch
@@ -29,6 +31,30 @@ func createServices(context *env.Context, store *item.ItemStore, pool *dist.Inst
 func startServices(services []service.Service){
 	for _,service := range services {
 		service.Start()
+	}
+}
+func loadPlugins(){
+	// Browse plugin directory
+	pluginDirectory,err := os.Open("plugins")
+	if err != nil {
+		// no plugins directory
+		return
+	}
+	info, err := pluginDirectory.Stat()
+	if !info.IsDir() {
+		// plugins is not a directory 
+		return
+	}
+	files,err := pluginDirectory.Readdir(0)
+	if err != nil {
+		fmt.Println("Unable to browse plugins directory")
+		return
+	}
+	for _,file := range files {
+		p, err := plugin.Open(file.Name())
+		if err != nil {
+			fmt.Println("Unable to load plugin",file.Name(),":",err)
+		}
 	}
 }
 func main() {
