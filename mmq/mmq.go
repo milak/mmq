@@ -56,7 +56,7 @@ func loadPlugins(){
 	fmt.Println("Loading plugin")
 	for _,file := range files {
 		fmt.Println("Loading plugin",file.Name(),"...")
-		p, err := plugin.Open(file.Name())
+		_, err := plugin.Open(file.Name())
 		if err != nil {
 			fmt.Println("Unable to load plugin",file.Name(),":",err)
 		}
