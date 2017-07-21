@@ -50,6 +50,7 @@ func loadPlugins(){
 		fmt.Println("Unable to browse plugins directory")
 		return
 	}
+	fmt.Println("Loading plugin",file.Name(),"...")
 	for _,file := range files {
 		fmt.Println("Loading plugin",file.Name(),"...")
 		p, err := plugin.Open(file.Name())
@@ -60,8 +61,10 @@ func loadPlugins(){
 	}
 }
 func main() {
-	
 	flag.Parse() // Scan the arguments list
+	
+	loadPlugins()
+	
 	linkOptionAsString := (*linkOption)
 	configuration,_ := conf.InitConfiguration(*configurationFileName)
     if linkOptionAsString != "" {
