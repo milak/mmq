@@ -348,6 +348,9 @@ func (this *DistributedItemService) Start() {
 	event.Bus.AddListener(this)
 	go this._distribute()
 }
+func (this *DistributedItemService) GetName() string {
+	return "DistributedItem"
+}
 func (this *DistributedItemService) Stop() {
 	event.Bus.RemoveListener(this)
 }

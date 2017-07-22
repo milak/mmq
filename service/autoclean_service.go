@@ -30,6 +30,9 @@ func (this *AutoCleanService) Start(){
 		go this.run()
 	}
 }
+func (this *AutoCleanService) GetName() string {
+	return "AutoClean"
+}
 /**
  * Stop the service
  */

@@ -111,7 +111,9 @@ func (this *SyncService) scanInstances() {
 		time.Sleep(2 * time.Second)
 	}
 }
-
+func (this *SyncService) GetName () string{
+	return "SYNC"
+}
 func (this *SyncService) Stop (){
 	this.running = false
 }

@@ -624,5 +624,8 @@ func (this *HttpRestService) Start() {
 		go http.ListenAndServe(":"+this.port, nil)*/
 	}
 }
+func (this *HttpRestService) GetName() string {
+	return "REST"
+}
 func (this *HttpRestService) Stop() {
 }
