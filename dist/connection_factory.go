@@ -3,7 +3,7 @@ package dist
 import (
 	"io"
 	"net"
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 )
 
 type connectionFactory interface {
