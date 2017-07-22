@@ -18,23 +18,20 @@ import (
 var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
 var linkOption *string = flag.String("l", "", "Link to a server to get the configuration.")
 var configurationFileName *string = flag.String("f", "configuration.json", "The configuration file name")
-func createServices(context *env.Context, store *item.ItemStore, pool *dist.InstancePool) []service.Service {
-	result := []service.Service{}
-	result = append(result,service.NewDistributedItemService(context,pool,store))
-	result = append(result,service.NewHttpRestService(context,store))
+func createServices(context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
+	context.RegisterService(service.NewDistributedItemService(context,pool,store))
+	context.RegisterService(service.NewHttpRestService(context,store))
 	//result = append(result,service.NewHttpService(context,store))
-	result = append(result,service.NewSyncService(context,pool))
-	result = append(result,dist.NewListener(context,pool))
-	result = append(result,service.NewAutoCleanService(context,store))
-	return result
+	context.RegisterService(service.NewSyncService(context,pool))
+	context.RegisterService(dist.NewListener(context,pool))
+	context.RegisterService(result,service.NewAutoCleanService(context,store))
 }
 func startServices(services []service.Service){
 	for _,service := range services {
 		service.Start()
 	}
 }
-func loadPlugins(){
-	fmt.Println("Loading plugins")
+func loadPlugins(context *env.Context){
 	// Browse plugin directory
 	pluginDirectory,err := os.Open("plugins")
 	if err != nil {
@@ -42,10 +39,10 @@ func loadPlugins(){
 		// no plugins directory
 		return
 	}
+	fmt.Println("Loading plugins...")
 	info, err := pluginDirectory.Stat()
 	if !info.IsDir() {
-		fmt.Println("Plugin directory is not a directory")
-		// plugins is not a directory 
+		fmt.Println("Plugins directory is not a directory")
 		return
 	}
 	files,err := pluginDirectory.Readdir(0)
@@ -53,20 +50,20 @@ func loadPlugins(){
 		fmt.Println("Unable to browse plugins directory",err)
 		return
 	}
-	fmt.Println("Loading plugin")
 	for _,file := range files {
 		fmt.Println("Loading plugin",file.Name(),"...")
-		_, err := plugin.Open("plugins/"+file.Name())
+		thePlugin, err := plugin.Open("plugins/"+file.Name())
 		if err != nil {
 			fmt.Println("Unable to load plugin",file.Name(),":",err)
 		}
-		
+		function,err := thePlugin.Lookup("Init")
+		if err != nil {
+			function.(func(*env.Context))(context)
+		}
 	}
 }
 func main() {
 	flag.Parse() // Scan the arguments list
-	
-	loadPlugins()
 	
 	linkOptionAsString := (*linkOption)
 	configuration,_ := conf.InitConfiguration(*configurationFileName)
@@ -97,12 +94,13 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
+    loadPlugins(&context)
     
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
     
-    services := createServices(context,store,pool)
-    startServices(services)
+    createServices(context,store,pool)
+    startServices(context.Services)
     fmt.Println("MMQ started")
     for context.Running {
     	time.Sleep(1000 * time.Millisecond)
