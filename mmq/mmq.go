@@ -4,7 +4,7 @@ import (
     "flag"
     "fmt"
     "os"
-    "github.com/milak/mmq/env"
+    "github.com/milak/mmqapi/env"
     "github.com/milak/mmqapi/conf"
     "github.com/milak/mmq/service"
     "github.com/milak/mmq/item"

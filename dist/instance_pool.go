@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmq/env"
+	"github.com/milak/mmqapi/env"
 	"net"
 )
 /**

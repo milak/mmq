@@ -8,7 +8,7 @@ import (
 	"github.com/milak/tools/list"
 	"io"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmq/env"
+	"github.com/milak/mmqapi/env"
 	"strconv"
 )
 

@@ -6,7 +6,7 @@ import (
 	"github.com/milak/tools/event"
 	"io"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmq/env"
+	"github.com/milak/mmqapi/env"
 	"github.com/milak/mmq/item"
 	"net/http"
 	"os"
