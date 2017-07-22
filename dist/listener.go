@@ -43,6 +43,9 @@ func (this *Listener) Start(){
 		}
 	}
 }
+func (this *Listener) GetName() string {
+	return "listener"
+}
 /**
  * Listen remote Instances call
  * @param aPort : the listening port
