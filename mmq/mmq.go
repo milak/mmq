@@ -24,7 +24,7 @@ func createServices(context *env.Context, store *item.ItemStore, pool *dist.Inst
 	//result = append(result,service.NewHttpService(context,store))
 	context.RegisterService(service.NewSyncService(context,pool))
 	context.RegisterService(dist.NewListener(context,pool))
-	context.RegisterService(result,service.NewAutoCleanService(context,store))
+	context.RegisterService(service.NewAutoCleanService(context,store))
 }
 func startServices(services []env.Service){
 	for _,service := range services {
@@ -94,7 +94,7 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
-    loadPlugins(&context)
+    loadPlugins(context)
     
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
