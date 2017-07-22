@@ -58,6 +58,8 @@ func loadPlugins(context *env.Context){
 		} else {
 			function,err := thePlugin.Lookup("Init")
 			if err != nil {
+				context.Logger.Println("WARNING Unable to initialize plugin",file.Name(),":",err)
+			} else {
 				function.(func(*env.Context))(context)
 			}
 		}
