@@ -55,10 +55,11 @@ func loadPlugins(context *env.Context){
 		thePlugin, err := plugin.Open("plugins/"+file.Name())
 		if err != nil {
 			fmt.Println("Unable to load plugin",file.Name(),":",err)
-		}
-		function,err := thePlugin.Lookup("Init")
-		if err != nil {
-			function.(func(*env.Context))(context)
+		} else {
+			function,err := thePlugin.Lookup("Init")
+			if err != nil {
+				function.(func(*env.Context))(context)
+			}
 		}
 	}
 }
