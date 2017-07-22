@@ -39,7 +39,7 @@ func loadPlugins(context *env.Context){
 		// no plugins directory
 		return
 	}
-	fmt.Println("Loading plugins...")
+	context.Logger.Println("INFO Loading plugins...")
 	info, err := pluginDirectory.Stat()
 	if !info.IsDir() {
 		context.Logger.Println("WARNING Plugins directory is not a directory")
@@ -51,7 +51,7 @@ func loadPlugins(context *env.Context){
 		return
 	}
 	for _,file := range files {
-		fmt.Println("Loading plugin",file.Name(),"...")
+		context.Logger.Println("DEBUG Loading plugin",file.Name(),"...")
 		thePlugin, err := plugin.Open("plugins/"+file.Name())
 		if err != nil {
 			context.Logger.Println("WARNING Unable to load plugin",file.Name(),":",err)
