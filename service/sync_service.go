@@ -2,7 +2,7 @@ package service
 
 import (
 	"log"
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 	"github.com/milak/mmq/env"
 	"github.com/milak/mmq/dist"
 	"github.com/milak/tools/event"

@@ -2,7 +2,7 @@ package env
 
 import (
 	"log"
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 	"github.com/milak/tools/network"
 	"os"
 )

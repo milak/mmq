@@ -1,7 +1,7 @@
 package item
 
 import (
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 )
 
 // Event

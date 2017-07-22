@@ -5,7 +5,7 @@ import (
 	"github.com/milak/tools/math"
 	"log"
 	"math/rand"
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 	"github.com/milak/mmq/dist"
 	"github.com/milak/mmq/env"
 	"github.com/milak/mmq/item"
