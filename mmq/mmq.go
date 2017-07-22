@@ -35,26 +35,26 @@ func loadPlugins(context *env.Context){
 	// Browse plugin directory
 	pluginDirectory,err := os.Open("plugins")
 	if err != nil {
-		fmt.Println("No plugin directory")
+		context.Logger.Println("WARNING No plugin directory")
 		// no plugins directory
 		return
 	}
 	fmt.Println("Loading plugins...")
 	info, err := pluginDirectory.Stat()
 	if !info.IsDir() {
-		fmt.Println("Plugins directory is not a directory")
+		context.Logger.Println("WARNING Plugins directory is not a directory")
 		return
 	}
 	files,err := pluginDirectory.Readdir(0)
 	if err != nil {
-		fmt.Println("Unable to browse plugins directory",err)
+		context.Logger.Println("WARNING Unable to browse plugins directory",err)
 		return
 	}
 	for _,file := range files {
 		fmt.Println("Loading plugin",file.Name(),"...")
 		thePlugin, err := plugin.Open("plugins/"+file.Name())
 		if err != nil {
-			fmt.Println("Unable to load plugin",file.Name(),":",err)
+			context.Logger.Println("WARNING Unable to load plugin",file.Name(),":",err)
 		} else {
 			function,err := thePlugin.Lookup("Init")
 			if err != nil {
