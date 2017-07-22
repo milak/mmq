@@ -1,7 +1,7 @@
 package dist
 
 import (
-	"github.com/milak/mmq/conf"
+	"github.com/milak/mmqapi/conf"
 )
 /**
  * Events raised by dist package 
