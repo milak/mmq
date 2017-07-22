@@ -3,7 +3,6 @@ package env
 import (
 	"log"
 	"github.com/milak/mmq/conf"
-	"github.com/milak/mmq/service"
 	"github.com/milak/tools/network"
 	"os"
 )
@@ -14,7 +13,7 @@ type Context struct {
 	Logger			*log.Logger
 	Host			string
 	InstanceName	string
-	Services		[]service.Service
+	Services		[]Service
 }
 func NewContext(conf *conf.Configuration) *Context {
 	if conf == nil {
@@ -44,8 +43,8 @@ func NewContext(conf *conf.Configuration) *Context {
 			break
 		}
 	}
-	return &Context{Running : true, Configuration : conf, Logger : logger, Host : host, InstanceName : InstanceName, Services : make([]service.Service,0)}
+	return &Context{Running : true, Configuration : conf, Logger : logger, Host : host, InstanceName : InstanceName, Services : make([]Service,0)}
 }
-func (this *Context) RegisterService(aService service.Service){
+func (this *Context) RegisterService(aService Service){
 	this.Services = append(this.Services,aService)
 }

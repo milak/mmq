@@ -26,7 +26,7 @@ func createServices(context *env.Context, store *item.ItemStore, pool *dist.Inst
 	context.RegisterService(dist.NewListener(context,pool))
 	context.RegisterService(result,service.NewAutoCleanService(context,store))
 }
-func startServices(services []service.Service){
+func startServices(services []env.Service){
 	for _,service := range services {
 		service.Start()
 	}
