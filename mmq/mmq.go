@@ -64,8 +64,8 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
-    c := $osgi.Context{Logger : context.Logger}
-    /*pluginRegistry*/_ := osgi.NewPluginRegistry("plugins",c)
+    osgi_context := $osgi.Context{Logger : context.Logger}
+    /*pluginRegistry*/_ := osgi.NewPluginRegistry("plugins",osgi_context)
     
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
