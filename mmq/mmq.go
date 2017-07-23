@@ -3,7 +3,6 @@ package main
 import (
     "flag"
     "fmt"
-    "os"
     "github.com/milak/mmqapi/env"
     "github.com/milak/mmqapi/conf"
     "github.com/milak/mmq/service"
@@ -12,7 +11,6 @@ import (
     "github.com/milak/tools/osgi"
     "strings"
     "time"
-    "plugin"
 )
 
 // The flag package provides a default help printer via -h switch
