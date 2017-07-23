@@ -9,6 +9,7 @@ import (
     "github.com/milak/mmq/service"
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
+    "github.com/milak/tools/osgi"
     "strings"
     "time"
     "plugin"
@@ -29,40 +30,6 @@ func createServices(context *env.Context, store *item.ItemStore, pool *dist.Inst
 func startServices(services []env.Service){
 	for _,service := range services {
 		service.Start()
-	}
-}
-func loadPlugins(context *env.Context){
-	// Browse plugin directory
-	pluginDirectory,err := os.Open("plugins")
-	if err != nil {
-		context.Logger.Println("WARNING No plugin directory")
-		// no plugins directory
-		return
-	}
-	context.Logger.Println("INFO Loading plugins...")
-	info, err := pluginDirectory.Stat()
-	if !info.IsDir() {
-		context.Logger.Println("WARNING Plugins directory is not a directory")
-		return
-	}
-	files,err := pluginDirectory.Readdir(0)
-	if err != nil {
-		context.Logger.Println("WARNING Unable to browse plugins directory",err)
-		return
-	}
-	for _,file := range files {
-		context.Logger.Println("DEBUG Loading plugin",file.Name(),"...")
-		thePlugin, err := plugin.Open("plugins/"+file.Name())
-		if err != nil {
-			context.Logger.Println("WARNING Unable to load plugin",file.Name(),":",err)
-		} else {
-			function,err := thePlugin.Lookup("Init")
-			if err != nil {
-				context.Logger.Println("WARNING Unable to initialize plugin",file.Name(),":",err)
-			} else {
-				function.(func(*env.Context))(context)
-			}
-		}
 	}
 }
 func main() {
@@ -97,7 +64,8 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
-    loadPlugins(context)
+    c := $osgi.Context{Logger : context.Logger}
+    /*pluginRegistry*/_ := osgi.NewPluginRegistry("plugins",c)
     
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
