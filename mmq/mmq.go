@@ -12,7 +12,7 @@ import (
     "strings"
     "time"
 )
-
+var framework osgi.Framework
 // The flag package provides a default help printer via -h switch
 var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
 var linkOption *string = flag.String("l", "", "Link to a server to get the configuration.")
@@ -62,8 +62,8 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
-    osgi_context := &osgi.Context{Logger : context.Logger}
-    /*pluginRegistry :=*/  osgi.NewPluginRegistry("plugins",osgi_context)
+    framework = osgi.NewFramework("plugins",context.Logger)
+    framework.Start()
     
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
