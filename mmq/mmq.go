@@ -12,7 +12,7 @@ import (
     "strings"
     "time"
 )
-var framework osgi.Framework
+var framework *osgi.Framework
 // The flag package provides a default help printer via -h switch
 var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
 var linkOption *string = flag.String("l", "", "Link to a server to get the configuration.")
