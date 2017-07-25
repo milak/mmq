@@ -4,6 +4,7 @@ package dist
  */
 import (
 	"github.com/milak/tools/osgi"
+	"github.com/milak/mmqapi/conf"
 	"log"
 	"net"
 )
@@ -20,7 +21,7 @@ func NewListener(aContext osgi.BundleContext, aPool *InstancePool) *Listener {
 	return &Listener{context : aContext, pool : aPool, running : true, protocol : NewProtocol(aContext,aPool), logger : aContext.GetLogger()}
 }
 func (this *Listener) Start(){
-	configuration := this.context.GetProperty("configuration")
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]
 		if !service.Active {
