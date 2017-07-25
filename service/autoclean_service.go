@@ -2,23 +2,25 @@ package service
 
 import (
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmqapi/env"
+	"github.com/milak/tools/osgi"
 	"github.com/milak/mmq/item"
 	"time"
+	"log"
 )
 /**
  * AutoClean Service removes expired items according to TimeToLive parameter in Topic properties.
  */
 type AutoCleanService struct {
-	context *env.Context
+	context osgi.BundleContext
+	logger	*log.Logger
 	store   *item.ItemStore
 	running bool
 }
 /**
  * Create a new AutoCleanService
  */
-func NewAutoCleanService(aContext *env.Context, aStore *item.ItemStore) *AutoCleanService {
-	result := &AutoCleanService{context:aContext, store : aStore, running : false}
+func NewAutoCleanService(aContext osgi.BundleContext, aStore *item.ItemStore) *AutoCleanService {
+	result := &AutoCleanService{context:aContext, logger : aContext.GetLogger(), store : aStore, running : false}
 	return result;
 }
 /**
@@ -40,19 +42,20 @@ func (this *AutoCleanService) Stop(){
 	this.running = false
 }
 func (this *AutoCleanService) run (){
-	this.context.Logger.Println("INFO Starting autoclean")
+	this.logger.Println("INFO Starting autoclean")
 	// TODO prendre en compte lorsqu'un nouveau TOPIC est ajouté ou mis à jour via les évènements
-	topics, timeToLives := computeTimeToLivesAndTopics(this.context)
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	topics, timeToLives := computeTimeToLivesAndTopics(this.logger,configuration)
 	for this.running && this.context.Running {
 		time.Sleep(1 * time.Second)
-		//this.context.Logger.Println("Cleaning")
+		//this.logger.Println("Cleaning")
 		for topicIndex,topic := range topics {
-			//this.context.Logger.Println("Topic ",topic.Name," ",timeToLives[topicIndex])
+			//this.logger.Println("Topic ",topic.Name," ",timeToLives[topicIndex])
 			iterator,_ := this.store.List(topic.Name)
 			for iterator.HasNext() {
 				item := iterator.Next().(*item.Item)
 				age := item.GetAge()
-				this.context.Logger.Println("Computing for ",item," ",age)
+				this.logger.Println("Computing for ",item," ",age)
 				if age > timeToLives[topicIndex] {
 					//fmt.Println("Removing ",item)
 					this.store.RemoveItem(topic.Name,item)
@@ -61,7 +64,7 @@ func (this *AutoCleanService) run (){
 		}
 	}
 }
-func computeTimeToLivesAndTopics(aContext *env.Context) ([]*conf.Topic, []time.Duration) {
+func computeTimeToLivesAndTopics(aLogger *log.Logger, aConfiguration *conf.Configuration) ([]*conf.Topic, []time.Duration) {
 	var topics []*conf.Topic
 	var timeToLives []time.Duration
 	for _,topic := range aContext.Configuration.Topics {

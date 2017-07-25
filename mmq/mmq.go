@@ -25,7 +25,7 @@ func createServices(framework *osgi.Framework ,context *env.Context, store *item
 	//result = append(result,service.NewHttpService(context,store))
 	framework.RegisterService(service.NewSyncService(bundleContext,pool))
 	framework.RegisterService(dist.NewListener(bundleContext,pool))
-	framework.RegisterService(service.NewAutoCleanService(context,store))
+	framework.RegisterService(service.NewAutoCleanService(bundleContext,store))
 }
 func startServices(){
 	for _,service := range framework.GetServices() {
