@@ -4,6 +4,7 @@ import (
 	"io"
 	"math"
 	"time"
+	"github.com/milak/tools/data"
 	"github.com/milak/mmqapi/env"
 	"github.com/google/uuid"
 )
@@ -21,17 +22,13 @@ const PROPERTY_CREATION_DATE = "creation_date"
 	Properties() 	[]Property
 	AddProperty(aName,aValue string) *Property
 }*/
-type Property struct {
-	Name string
-	Value string
-}
 type Item struct {
 	ID 				string
 	Topics			[]string
 	CreationDate	time.Time
 	value 			[]byte
 	ptr 			int
-	Properties 		[]Property
+	Properties 		[]data.Property
 	shared			bool
 }
 func NewItem (aTopics []string) *Item{

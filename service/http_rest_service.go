@@ -6,6 +6,7 @@ import (
 	"github.com/milak/mmqapi/conf"
 	"github.com/milak/mmqapi/env"
 	"github.com/milak/mmq/item"
+	"github.com/milak/tools/data"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/network"
 	"github.com/google/uuid"
@@ -561,7 +562,7 @@ func (this *HttpRestService) methodNotSupported(w http.ResponseWriter, aMethod s
 type DisplayableItem struct {
 	ID         string
 	Age        time.Duration
-	Properties []item.Property
+	Properties []data.Property
 }
 
 func (this *HttpRestService) Start() {

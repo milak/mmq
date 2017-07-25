@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/milak/tools/event"
+	"github.com/milak/tools/data"
 	"io"
 	"github.com/milak/mmqapi/conf"
 	"github.com/milak/mmqapi/env"
@@ -146,7 +147,7 @@ func (this *HttpService) itemListener(w http.ResponseWriter, req *http.Request) 
 type _DisplayableItem struct {
 	ID         string
 	Age        time.Duration
-	Properties []item.Property
+	Properties []data.Property
 }
 
 func (this *HttpService) writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
