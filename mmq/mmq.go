@@ -69,7 +69,7 @@ func main() {
     store 	:= item.NewStore(context)
     
     createServices(framework,context,store,pool)
-    startServices(context.Services)
+    startServices()
     fmt.Println("MMQ started")
     for context.Running {
     	time.Sleep(1000 * time.Millisecond)
