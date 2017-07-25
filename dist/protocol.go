@@ -228,7 +228,7 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
 	//this.logger.Println("Sending configuration")
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
-	configuration = this.context.GetProperty("configuration")
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	encoder.Encode(configuration.Instances)
 	this.sendCommand("INSTANCES",buffer.Bytes(),*aConnection)
 	buffer.Reset()
@@ -248,7 +248,7 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
  * Process the connection when called by a remote node.
  */
 func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) {
-	host,_,_ = net.SplitHostPort(aConn.LocalAddr().String())
+	host,_,_ := net.SplitHostPort(aConn.LocalAddr().String())
 	this.context.SetProperty("host",host)
 	this.logger.Println("DEBUG Processing call")
 	buffer := make([]byte,1000)
