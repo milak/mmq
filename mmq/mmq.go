@@ -18,10 +18,11 @@ var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
 var linkOption *string = flag.String("l", "", "Link to a server to get the configuration.")
 var configurationFileName *string = flag.String("f", "configuration.json", "The configuration file name")
 func createServices(framework *osgi.Framework ,context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
+	bundleContext := framework.GetBundleContext()
 	framework.RegisterService(service.NewDistributedItemService(context,pool,store))
 	framework.RegisterService(service.NewHttpRestService(context,store))
 	//result = append(result,service.NewHttpService(context,store))
-	framework.RegisterService(service.NewSyncService(context,pool))
+	framework.RegisterService(service.NewSyncService(bundleContext,pool))
 	framework.RegisterService(dist.NewListener(context,pool))
 	framework.RegisterService(service.NewAutoCleanService(context,store))
 }
@@ -63,6 +64,9 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins",context.Logger)
+    framework.SetProperty("configuration",&configuration)
+    host,_ := network.GetLocalIP()
+    framework.SetProperty("host",host)
     framework.Start()
     
 	pool 	:= dist.NewInstancePool(context)  

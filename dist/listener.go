@@ -4,24 +4,26 @@ package dist
  */
 import (
 	"github.com/milak/mmqapi/env"
+	"github.com/milak/tools/osgi"
 	"log"
 	"net"
 )
 type Listener struct {
 	listener 	net.Listener					// a reference to the listener when doListen has been called
-	context		*env.Context
+	context		osgi.BundleContext
 	pool		*InstancePool
 	logger		*log.Logger
 	port		string
 	running		bool
 	protocol	*protocol
 }
-func NewListener(aContext *env.Context, aPool *InstancePool) *Listener {
-	return &Listener{context : aContext, pool : aPool, running : true, protocol : NewProtocol(aContext,aPool), logger : aContext.Logger}
+func NewListener(aContext osgi.BundleContext, aPool *InstancePool) *Listener {
+	return &Listener{context : aContext, pool : aPool, running : true, protocol : NewProtocol(aContext,aPool), logger : aContext.GetLogger()}
 }
 func (this *Listener) Start(){
-	for s := range this.context.Configuration.Services {
-		service := this.context.Configuration.Services[s]
+	configuration := this.context.GetProperty("configuration")
+	for s := range configuration.Services {
+		service := configuration.Services[s]
 		if !service.Active {
 			continue
 		}

@@ -6,6 +6,7 @@ import (
 	"github.com/milak/mmqapi/env"
 	"github.com/milak/mmq/dist"
 	"github.com/milak/tools/event"
+	"github.com/milak/tools/osgi"
 //	"reflect"
 	"time"
 )
@@ -19,7 +20,7 @@ import (
  */
 type SyncService struct {
 	running 	bool							// boolean indicating if the service is running, setting it to false, should stop listening 
-	context 	*env.Context					// a reference to the context, usefull to get accès to store, logger and configuration
+	context 	osgi.BundleContext				// a reference to the context, usefull to get accès to logger and configuration
 	logger		*log.Logger						// the logger obtained from context, it is copied here for code readability reason
 	pool		*dist.InstancePool
 	port		string
@@ -27,14 +28,15 @@ type SyncService struct {
 /**
  * Constructor for the SyncService class
  */
-func NewSyncService (aContext *env.Context, aInstancePool *dist.InstancePool) *SyncService {
+func NewSyncService (aContext *osgi.BundleContext, aInstancePool *dist.InstancePool) *SyncService {
 	result := &SyncService{running : true, context : aContext, logger : aContext.Logger, pool : aInstancePool}
 	event.Bus.AddListener(result)
 	return result
 }
 func (this *SyncService) Start (){
-	for s := range this.context.Configuration.Services {
-		service := this.context.Configuration.Services[s]
+	configuration := this.context.GetProperty("configuration")
+	for s := range configuration.Services {
+		service := configuration.Services[s]
 		if !service.Active {
 			continue
 		}
@@ -52,6 +54,7 @@ func (this *SyncService) Start (){
 }
 // Catch events
 func (this *SyncService) Event(aEvent interface{}) {
+	configuration := this.context.GetProperty("configuration")
 	switch e:= aEvent.(type) {
 		case *conf.InstanceRemoved :
 			instanceConnection := this.pool.GetInstanceByName(e.Instance.Name())
@@ -60,17 +63,17 @@ func (this *SyncService) Event(aEvent interface{}) {
 			}
 		case *dist.TopicReceived :
 			this.logger.Println("DEBUG Received topic : " + e.Topic.Name)
-			existingTopic := this.context.Configuration.GetTopic(e.Topic.Name)
+			existingTopic := configuration.GetTopic(e.Topic.Name)
 			if existingTopic != nil {
 				this.logger.Println("DEBUG Skipped because allready known")
 			} else {
-				this.context.Configuration.AddTopic(e.Topic)
+				configuration.AddTopic(e.Topic)
 			}
 		case *dist.InstanceReceived :
 			if (e.Instance.Host == this.context.Host) && (e.Instance.Port == this.port) {
 				//this.logger.Println("DEBUG Skipped instance cause it is me :)")
 			} else {
-				if this.context.Configuration.AddInstance(e.Instance) {
+				if configuration.AddInstance(e.Instance) {
 					this.logger.Println("DEBUG Added instance :",e.Instance)
 				}
 			}
@@ -84,12 +87,13 @@ func (this *SyncService) Event(aEvent interface{}) {
  * Scan not connected Instances and try to Connect
  */
 func (this *SyncService) scanInstances() {
+	configuration := this.context.GetProperty("configuration")
 	const SAY_IT = 0
 	const WAIT_FOR = 100
 	timeBeforeSaying := SAY_IT
 	time.Sleep(2 * time.Second)
 	for this.running {
-		for _,instance := range this.context.Configuration.Instances {
+		for _,instance := range configuration.Instances {
 			if !instance.Connected {
 				if timeBeforeSaying == SAY_IT {
 					this.logger.Println("INFO trying to connect to ",instance.Name())
