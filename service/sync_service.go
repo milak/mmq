@@ -53,7 +53,7 @@ func (this *SyncService) Start (){
 }
 // Catch events
 func (this *SyncService) Event(aEvent interface{}) {
-	configuration := this.context.GetProperty("configuration")
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	switch e:= aEvent.(type) {
 		case *conf.InstanceRemoved :
 			instanceConnection := this.pool.GetInstanceByName(e.Instance.Name())
@@ -86,7 +86,7 @@ func (this *SyncService) Event(aEvent interface{}) {
  * Scan not connected Instances and try to Connect
  */
 func (this *SyncService) scanInstances() {
-	configuration := this.context.GetProperty("configuration")
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	const SAY_IT = 0
 	const WAIT_FOR = 100
 	timeBeforeSaying := SAY_IT
