@@ -80,4 +80,5 @@ func main() {
     	time.Sleep(1000 * time.Millisecond)
     }
     fmt.Println("MMQ stopped")
+    framework.Stop()
 }
