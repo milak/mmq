@@ -614,7 +614,7 @@ func (this *HttpRestService) Start() {
 		objectMap["service"] = &service{context : this.context}
 		objectMap["shutdown"] = &shutdown{context : this.context}
 		go network.Listen("/API",this.port,objectMap)
-		fmt.Println("Starting REST API on port " + this.port)
+		this.context.Logger.Println("INFO Starting REST API on port " + this.port)
 		/*http.HandleFunc("/instance", this.instanceListListener)
 		http.HandleFunc("/instance/", this.instanceListener)
 		http.HandleFunc("/topic", this.topicListListener)
