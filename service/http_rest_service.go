@@ -210,7 +210,7 @@ func _writeItem(w http.ResponseWriter, aItem *item.Item, aReader io.Reader) {
 		if i != 0 {
 			properties += ","
 		}
-		properties += "{\"name\" : \"" + p.Name + "\", \"value\" : \"" + p.Value + "\"}"
+		properties += "{\"name\" : \"" + p.Name + "\", \"value\" : \"" + p.Value.(string) + "\"}"
 	}
 	properties += "]"
 	w.Header().Add("properties", properties)
@@ -372,7 +372,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 					if i > 0 {
 						topicList += ", "
 					}
-					properties += property.Name + " = " + property.Value + "\n"
+					properties += property.Name + " = " + property.Value.(string) + "\n"
 				}
 				description += "Properties : \n" + properties
 			}
@@ -434,7 +434,7 @@ func (this *topic) Get(w http.ResponseWriter, req *http.Request) {
 					if i > 0 {
 						topicList += ", "
 					}
-					properties += property.Name + " = " + property.Value + "\n"
+					properties += property.Name + " = " + property.Value.(string) + "\n"
 				}
 				description += "Properties : \n" + properties
 			}

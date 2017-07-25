@@ -157,7 +157,7 @@ func (this *HttpService) writeItem(w http.ResponseWriter, aItem *item.Item, aRea
 		if i != 0 {
 			properties += ","
 		}
-		properties += "{\"name\" : \"" + p.Name + "\", \"value\" : \"" + p.Value + "\"}"
+		properties += "{\"name\" : \"" + p.Name + "\", \"value\" : \"" + p.Value.(string) + "\"}"
 	}
 	properties += "]"
 	w.Header().Add("properties", properties)
@@ -269,7 +269,7 @@ func (this *HttpService) topicListener(w http.ResponseWriter, req *http.Request)
 						if i > 0 {
 							topicList += ", "
 						}
-						properties += property.Name + " = " + property.Value
+						properties += property.Name + " = " + property.Value.(string)
 					}
 					description += " with properties : "+properties
 				}
