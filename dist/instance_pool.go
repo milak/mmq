@@ -52,7 +52,8 @@ func NewInstancePool(aContext osgi.BundleContext) *InstancePool {
 	result.logger 			= aContext.GetLogger()
 	result.connections 		= make(map[string]*instanceConnection)
 	result.instancesByGroup = make(map[string][]*instanceConnection)
-	service := aContext.GetProperty("configuration").GetServiceByName(conf.SERVICE_SYNC)
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	service := configuration.GetServiceByName(conf.SERVICE_SYNC)
 	if service != nil {
 		param := service.GetParameterByName(conf.PARAMETER_PORT)
 		if param != nil {

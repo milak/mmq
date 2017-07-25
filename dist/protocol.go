@@ -30,7 +30,7 @@ type protocol struct {
 const DIEZE byte = byte('#')
 func NewProtocol(aContext osgi.BundleContext, aConnectionFactory connectionFactory) *protocol {
 	result := &protocol{context : aContext, logger : aContext.GetLogger(), connectionFactory : aConnectionFactory}
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := aContext.GetProperty("configuration").(*conf.Configuration)
 	for _,service := range configuration.Services {
 		if service.Name == conf.SERVICE_SYNC {
 			for _,parameter := range service.Parameters {
