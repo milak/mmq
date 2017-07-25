@@ -14,7 +14,6 @@ import (
 	"os"
 	"strings"
 	"time"
-	"fmt"
 )
 
 type instance struct {
