@@ -67,10 +67,10 @@ func (this *AutoCleanService) run (){
 func computeTimeToLivesAndTopics(aLogger *log.Logger, aConfiguration *conf.Configuration) ([]*conf.Topic, []time.Duration) {
 	var topics []*conf.Topic
 	var timeToLives []time.Duration
-	for _,topic := range aContext.Configuration.Topics {
+	for _,topic := range aConfiguration.Topics {
 		duration,err := topic.GetTimeToLive()
 		if err != nil {
-			aContext.Logger.Println("WARNING Unable to parse PARAMETER " + conf.PARAMETER_TIME_TO_LIVE + " '"+topic.GetParameterByName(conf.PARAMETER_TIME_TO_LIVE)+"' for topic " +topic.Name + " time to live will not be used",err)
+			aLogger.Println("WARNING Unable to parse PARAMETER " + conf.PARAMETER_TIME_TO_LIVE + " '"+topic.GetParameterByName(conf.PARAMETER_TIME_TO_LIVE)+"' for topic " +topic.Name + " time to live will not be used",err)
 			continue
 		}
 		if duration == nil {
