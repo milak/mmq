@@ -17,16 +17,16 @@ var framework *osgi.Framework
 var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
 var linkOption *string = flag.String("l", "", "Link to a server to get the configuration.")
 var configurationFileName *string = flag.String("f", "configuration.json", "The configuration file name")
-func createServices(context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
-	context.RegisterService(service.NewDistributedItemService(context,pool,store))
-	context.RegisterService(service.NewHttpRestService(context,store))
+func createServices(framework *osgi.Framework ,context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
+	framework.RegisterService(service.NewDistributedItemService(context,pool,store))
+	framework.RegisterService(service.NewHttpRestService(context,store))
 	//result = append(result,service.NewHttpService(context,store))
-	context.RegisterService(service.NewSyncService(context,pool))
-	context.RegisterService(dist.NewListener(context,pool))
-	context.RegisterService(service.NewAutoCleanService(context,store))
+	framework.RegisterService(service.NewSyncService(context,pool))
+	framework.RegisterService(dist.NewListener(context,pool))
+	framework.RegisterService(service.NewAutoCleanService(context,store))
 }
-func startServices(services []env.Service){
-	for _,service := range services {
+func startServices(){
+	for _,service := range framework.GetServices() {
 		service.Start()
 	}
 }
@@ -68,7 +68,7 @@ func main() {
 	pool 	:= dist.NewInstancePool(context)  
     store 	:= item.NewStore(context)
     
-    createServices(context,store,pool)
+    createServices(framework,context,store,pool)
     startServices(context.Services)
     fmt.Println("MMQ started")
     for context.Running {
