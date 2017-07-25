@@ -46,7 +46,7 @@ func (this *AutoCleanService) run (){
 	// TODO prendre en compte lorsqu'un nouveau TOPIC est ajouté ou mis à jour via les évènements
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	topics, timeToLives := computeTimeToLivesAndTopics(this.logger,configuration)
-	for this.running && this.context.Running {
+	for this.running && this.context.GetBundle().GetState() == osgi.ACTIVE {
 		time.Sleep(1 * time.Second)
 		//this.logger.Println("Cleaning")
 		for topicIndex,topic := range topics {
