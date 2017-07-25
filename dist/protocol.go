@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/milak/tools/event"
+	"github.com/milak/tools/osgi"
 	"io"
 	"log"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmqapi/env"
 	"net"
 	"strconv"
 	"time"
@@ -21,15 +21,15 @@ type currentInstanceInformation struct {
 	Groups	[]string
 }
 type protocol struct {
-	context				*env.Context
+	context				osgi.BundleContext
 	logger				*log.Logger
 	port 				string
 	connectionFactory 	connectionFactory
 }
 // A const for DIEZE value
 const DIEZE byte = byte('#')
-func NewProtocol(aContext *env.Context, aConnectionFactory connectionFactory) *protocol {
-	result := &protocol{context : aContext, logger : aContext.Logger, connectionFactory : aConnectionFactory}
+func NewProtocol(aContext osgi.BundleContext, aConnectionFactory connectionFactory) *protocol {
+	result := &protocol{context : aContext, logger : aContext.GetLogger(), connectionFactory : aConnectionFactory}
 	for _,service := range aContext.Configuration.Services {
 		if service.Name == conf.SERVICE_SYNC {
 			for _,parameter := range service.Parameters {
@@ -129,7 +129,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 	var arguments, remain []byte
 	var needMore int
 	// while the service is running
-	for this.context.Running {
+	for this.context.GetState() == osgi.ACTIVE {
 		time.Sleep(500 * time.Millisecond)
 		//this.logger.Println("DEBUG after sleep")
 		// reintroduce remain from previous command
@@ -227,11 +227,12 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
 	//this.logger.Println("Sending configuration")
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
-	encoder.Encode(this.context.Configuration.Instances)
+	configuration = this.context.GetProperty("configuration")
+	encoder.Encode(configuration.Instances)
 	this.sendCommand("INSTANCES",buffer.Bytes(),*aConnection)
 	buffer.Reset()
 	var distibutedTopics []*conf.Topic
-	for _,topic := range this.context.Configuration.Topics {
+	for _,topic := range configuration.Topics {
 		if topic.IsDistributed() {
 			distibutedTopics = append(distibutedTopics,topic)
 		}
@@ -246,7 +247,8 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
  * Process the connection when called by a remote node.
  */
 func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) {
-	this.context.Host,_,_ = net.SplitHostPort(aConn.LocalAddr().String())
+	host,_,_ = net.SplitHostPort(aConn.LocalAddr().String())
+	this.context.SetProperty("host",host)
 	this.logger.Println("DEBUG Processing call")
 	buffer := make([]byte,1000)
 	count,err := aConn.Read(buffer)
@@ -299,7 +301,8 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 	// TODO : gerer le fait que les deux peuvent essayer de se connecter en même temps, il y aura alors deux connections entre eux
 }
 func (this *protocol) _prepareInfo() []byte {
-	info := currentInstanceInformation{Host : this.context.Host, Port : this.port, Version : this.context.Configuration.Version, Groups : this.context.Configuration.Groups}
+	configuration := this.context.GetProperty("configuration")
+	info := currentInstanceInformation{Host : this.context.getProperty("host"), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 	encoder.Encode(info)
