@@ -69,7 +69,8 @@ func (this *SyncService) Event(aEvent interface{}) {
 				configuration.AddTopic(e.Topic)
 			}
 		case *dist.InstanceReceived :
-			if (e.Instance.Host == this.context.Host) && (e.Instance.Port == this.port) {
+			host := this.context.GetProperty("host").(string)
+			if (e.Instance.Host == host) && (e.Instance.Port == this.port) {
 				//this.logger.Println("DEBUG Skipped instance cause it is me :)")
 			} else {
 				if configuration.AddInstance(e.Instance) {
