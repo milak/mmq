@@ -303,7 +303,7 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 }
 func (this *protocol) _prepareInfo() []byte {
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
-	info := currentInstanceInformation{Host : this.context.GetProperty("host"), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
+	info := currentInstanceInformation{Host : this.context.GetProperty("host").(string), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 	encoder.Encode(info)
