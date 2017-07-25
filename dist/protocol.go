@@ -130,7 +130,7 @@ func (this *protocol) _keepConnected(aInstance *conf.Instance, aConnection *net.
 	var arguments, remain []byte
 	var needMore int
 	// while the service is running
-	for this.context.GetState() == osgi.ACTIVE {
+	for this.context.GetBundle().GetState() == osgi.ACTIVE {
 		time.Sleep(500 * time.Millisecond)
 		//this.logger.Println("DEBUG after sleep")
 		// reintroduce remain from previous command
