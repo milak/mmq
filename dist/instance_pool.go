@@ -6,7 +6,7 @@ import (
 	"io"
 	"log"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmqapi/env"
+	"github.com/milak/tools/osgi"
 	"net"
 )
 /**
@@ -39,20 +39,20 @@ func (this *instanceConnection) Close() error {
 	return nil
 }
 type InstancePool struct {
-	context    			*env.Context
+	context    			osgi.BundleContext
 	logger 				*log.Logger
 	port 				string 							// will be obtained via configuration
 	connections			map[string]*instanceConnection	// a map that links instances to opened net connection
 	instancesByGroup 	map[string][]*instanceConnection
 	protocol			*protocol
 }
-func NewInstancePool(aContext *env.Context) *InstancePool {
+func NewInstancePool(aContext osgi.BundleContext) *InstancePool {
 	result := &InstancePool{context : aContext}
 	result.protocol 		= NewProtocol(aContext,result)
-	result.logger 			= aContext.Logger
+	result.logger 			= aContext.GetLogger()
 	result.connections 		= make(map[string]*instanceConnection)
 	result.instancesByGroup = make(map[string][]*instanceConnection)
-	service := aContext.Configuration.GetServiceByName(conf.SERVICE_SYNC)
+	service := aContext.GetProperty("configuration").GetServiceByName(conf.SERVICE_SYNC)
 	if service != nil {
 		param := service.GetParameterByName(conf.PARAMETER_PORT)
 		if param != nil {
@@ -69,7 +69,7 @@ func (this *InstancePool) Build (aInstance *conf.Instance, aConnection *net.Conn
  */
 func (this *InstancePool) newInstanceConnection (aInstance *conf.Instance, aConnection *net.Conn) *instanceConnection{
 	result := &instanceConnection{instance : aInstance, connection : aConnection, pool : this}
-	this.context.Logger.Println("DEBUG Adding connection to ",aInstance.Name())
+	this.context.GetLogger().Println("DEBUG Adding connection to ",aInstance.Name())
 	this.connections[aInstance.Name()] = result
 	return result
 }
