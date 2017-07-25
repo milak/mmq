@@ -3,7 +3,6 @@ package service
 import (
 	"log"
 	"github.com/milak/mmqapi/conf"
-	"github.com/milak/mmqapi/env"
 	"github.com/milak/mmq/dist"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/osgi"
@@ -28,13 +27,13 @@ type SyncService struct {
 /**
  * Constructor for the SyncService class
  */
-func NewSyncService (aContext *osgi.BundleContext, aInstancePool *dist.InstancePool) *SyncService {
-	result := &SyncService{running : true, context : aContext, logger : aContext.Logger, pool : aInstancePool}
+func NewSyncService (aContext osgi.BundleContext, aInstancePool *dist.InstancePool) *SyncService {
+	result := &SyncService{running : true, context : aContext, logger : aContext.GetLogger(), pool : aInstancePool}
 	event.Bus.AddListener(result)
 	return result
 }
 func (this *SyncService) Start (){
-	configuration := this.context.GetProperty("configuration")
+	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]
 		if !service.Active {
