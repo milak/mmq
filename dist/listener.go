@@ -3,7 +3,6 @@ package dist
  * This Service listens on SYNC PORT. Each call established emplies a call to Protocol class to process the exchange.
  */
 import (
-	"github.com/milak/mmqapi/env"
 	"github.com/milak/tools/osgi"
 	"log"
 	"net"
