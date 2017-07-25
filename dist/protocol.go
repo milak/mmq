@@ -302,8 +302,8 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 	// TODO : gerer le fait que les deux peuvent essayer de se connecter en même temps, il y aura alors deux connections entre eux
 }
 func (this *protocol) _prepareInfo() []byte {
-	configuration := this.context.GetProperty("configuration")
-	info := currentInstanceInformation{Host : this.context.getProperty("host"), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
+	configuration := aContext.GetProperty("configuration").(*conf.Configuration)
+	info := currentInstanceInformation{Host : this.context.GetProperty("host"), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 	encoder.Encode(info)
