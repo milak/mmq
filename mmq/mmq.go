@@ -9,6 +9,7 @@ import (
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
+    "github.com/milak/tools/network"
     "strings"
     "time"
 )
@@ -23,7 +24,7 @@ func createServices(framework *osgi.Framework ,context *env.Context, store *item
 	framework.RegisterService(service.NewHttpRestService(context,store))
 	//result = append(result,service.NewHttpService(context,store))
 	framework.RegisterService(service.NewSyncService(bundleContext,pool))
-	framework.RegisterService(dist.NewListener(context,pool))
+	framework.RegisterService(dist.NewListener(bundleContext,pool))
 	framework.RegisterService(service.NewAutoCleanService(context,store))
 }
 func startServices(){
