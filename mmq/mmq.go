@@ -65,7 +65,7 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins",context.Logger)
-    framework.SetProperty("configuration",&configuration)
+    framework.SetProperty("configuration",configuration)
     host,_ := network.GetLocalIP()
     framework.SetProperty("host",host)
     framework.Start()
