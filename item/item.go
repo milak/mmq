@@ -37,8 +37,8 @@ func NewItem (aTopics []string) *Item{
 	result.AddProperty(PROPERTY_ID, result.ID)
 	return result
 }
-func (this *Item) AddProperty(aName,aValue string) *Property {
-	result := Property{Name : aName, Value : aValue}
+func (this *Item) AddProperty(aName,aValue string) *data.Property {
+	result := data.Property{Name : aName, Value : aValue}
 	this.Properties = append(this.Properties,result)
 	return &result
 }
