@@ -70,7 +70,7 @@ func main() {
     framework.SetProperty("host",host)
     framework.Start()
     
-	pool 	:= dist.NewInstancePool(context)  
+	pool 	:= dist.NewInstancePool(framework.GetBundleContext())  
     store 	:= item.NewStore(context)
     
     createServices(framework,context,store,pool)
