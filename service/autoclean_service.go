@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/milak/mmqapi/conf"
 	"github.com/milak/tools/osgi"
-	"github.com/milak/tools/osgi/service"
+	osgiservice "github.com/milak/tools/osgi/service"
 	"github.com/milak/mmq/item"
 	"time"
 	"log"
@@ -28,7 +28,7 @@ func NewAutoCleanService(aStore *item.ItemStore) *AutoCleanService {
  * Start the service
  */
 func (this *AutoCleanService) Start(aBundleContext osgi.BundleContext){
-	this.logger =  aBundleContext.GetService("LogService").Get().(*service.LogService).GetLogger()
+	this.logger =  aBundleContext.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
 	if !this.running {
 		this.running = true
 		go this.run()
