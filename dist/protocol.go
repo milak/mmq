@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/osgi"
+	"github.com/milak/tools/osgi/service"
 	"io"
 	"log"
 	"github.com/milak/mmqapi/conf"
@@ -29,7 +30,8 @@ type protocol struct {
 // A const for DIEZE value
 const DIEZE byte = byte('#')
 func NewProtocol(aContext osgi.BundleContext, aConnectionFactory connectionFactory) *protocol {
-	result := &protocol{context : aContext, logger : aContext.GetLogger(), connectionFactory : aConnectionFactory}
+	logger := aContext.GetService("LogService").Get().(*service.LogService).GetLogger()
+	result := &protocol{context : aContext, logger : logger, connectionFactory : aConnectionFactory}
 	configuration := aContext.GetProperty("configuration").(*conf.Configuration)
 	for _,service := range configuration.Services {
 		if service.Name == conf.SERVICE_SYNC {
