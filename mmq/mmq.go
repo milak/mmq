@@ -9,7 +9,9 @@ import (
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
+    "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
+    "os"
     "strings"
     "time"
 )
@@ -20,12 +22,18 @@ var linkOption *string = flag.String("l", "", "Link to a server to get the confi
 var configurationFileName *string = flag.String("f", "configuration.json", "The configuration file name")
 func createServices(framework *osgi.Framework ,context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
 	bundleContext := framework.GetBundleContext()
-	framework.RegisterService(service.NewDistributedItemService(context,pool,store))
-	framework.RegisterService(service.NewHttpRestService(context,store))
+	
+	s := service.NewDistributedItemService(pool,store)
+	s.Start(bundleContext)
+	s = service.NewHttpRestService(context,store)
+	s.Start(bundleContext)
 	//result = append(result,service.NewHttpService(context,store))
-	framework.RegisterService(service.NewSyncService(bundleContext,pool))
-	framework.RegisterService(dist.NewListener(bundleContext,pool))
-	framework.RegisterService(service.NewAutoCleanService(bundleContext,store))
+	s = service.NewSyncService(pool)
+	s.Start(bundleContext)
+	s = dist.NewListener(bundleContext,pool)
+	s.Start(bundleContext)
+	s = service.NewAutoCleanService(bundleContext,store)
+	s.Start(bundleContext)
 }
 func startServices(){
 	for _,service := range framework.GetServices() {
@@ -64,7 +72,16 @@ func main() {
     if *versionFlag {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
-    framework = osgi.NewFramework("plugins",context.Logger)
+    framework = osgi.NewFramework("plugins")
+    var logService service.LogService
+    file, err := os.Create("mmq.log")
+	if err != nil {
+		logService = service.NewDefaultLogService()
+		logger.Println("WARNING Unable to open file mmq.log")
+	} else {
+		logService = service.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
+	}
+    framework.RegisterService("LogService",&logService)
     framework.SetProperty("configuration",configuration)
     host,_ := network.GetLocalIP()
     framework.SetProperty("host",host)
@@ -73,8 +90,9 @@ func main() {
 	pool 	:= dist.NewInstancePool(framework.GetBundleContext())  
     store 	:= item.NewStore(context)
     
+    framework.RegisterService("StoreService",store)
+    
     createServices(framework,context,store,pool)
-    startServices()
     fmt.Println("MMQ started")
     for context.Running {
     	time.Sleep(1000 * time.Millisecond)

@@ -6,6 +6,8 @@ import (
 	"github.com/milak/mmq/dist"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/osgi"
+	"github.com/milak/tools/osgi/service"
+	"github.com/milak/tools/logutil"
 //	"reflect"
 	"time"
 )
@@ -27,12 +29,20 @@ type SyncService struct {
 /**
  * Constructor for the SyncService class
  */
-func NewSyncService (aContext osgi.BundleContext, aInstancePool *dist.InstancePool) *SyncService {
-	result := &SyncService{running : true, context : aContext, logger : aContext.GetLogger(), pool : aInstancePool}
+func NewSyncService (aInstancePool *dist.InstancePool) *SyncService {
+	result := &SyncService{running : true, pool : aInstancePool}
 	event.Bus.AddListener(result)
 	return result
 }
-func (this *SyncService) Start (){
+func (this *SyncService) Start (aBundleContext osgi.BundleContext){
+	this.context = aBundleContext
+	logServiceRef := this.context.GetService("LogService")
+	if logServiceRef == nil {
+		this.logger = logutil.DefaultLogger
+	} else {
+		logService = logServiceRef.Get().(LogService)
+		this.logger = logService.GetLogger()
+	}
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]
@@ -118,6 +128,6 @@ func (this *SyncService) scanInstances() {
 func (this *SyncService) GetName () string{
 	return "SYNC"
 }
-func (this *SyncService) Stop (){
+func (this *SyncService) Stop (aBundleContext osgi.BundleContext){
 	this.running = false
 }

@@ -20,7 +20,7 @@ type Listener struct {
 func NewListener(aContext osgi.BundleContext, aPool *InstancePool) *Listener {
 	return &Listener{context : aContext, pool : aPool, running : true, protocol : NewProtocol(aContext,aPool), logger : aContext.GetLogger()}
 }
-func (this *Listener) Start(){
+func (this *Listener) Start(aBundleContext osgi.BundleContext){
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]

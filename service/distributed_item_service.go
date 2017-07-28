@@ -3,6 +3,8 @@ package service
 import (
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/math"
+	"github.com/milak/tools/osgi"
+	"github.com/milak/tools/logutil"
 	"log"
 	"math/rand"
 	"github.com/milak/mmqapi/conf"
@@ -15,7 +17,7 @@ import (
 )
 
 type DistributedItemService struct {
-	context                 *env.Context
+	context                 osgi.BundleContext
 	pool                    *dist.InstancePool
 	store                   *item.ItemStore
 	logger                  *log.Logger
@@ -24,11 +26,10 @@ type DistributedItemService struct {
 	_iterationBeforeLogging	int
 }
 const _ITERATIONS_BEFORE_LOGGING = 1
-func NewDistributedItemService(aContext *env.Context, aPool *dist.InstancePool, aStore *item.ItemStore) *DistributedItemService {
-	result := &DistributedItemService{context: aContext, pool: aPool, store: aStore}
+func NewDistributedItemService(aPool *dist.InstancePool, aStore *item.ItemStore) *DistributedItemService {
+	result := &DistributedItemService{pool: aPool, store: aStore}
 	result.sharedItems = make(map[string]*dist.SharedItem)
 	result.receivedItemsByInstance = make(map[string][]*dist.SharedItem)
-	result.logger = aContext.Logger
 	result._iterationBeforeLogging = _ITERATIONS_BEFORE_LOGGING
 	return result
 }
@@ -344,13 +345,18 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 		}
 	}
 }
-func (this *DistributedItemService) Start() {
+func (this *DistributedItemService) Start(aBundleContext osgi.BundleContext) {
+	this.context = aBundleContext
+	logServiceRef := aBundleContext.GetService("LogService")
+	if logServiceRef == nil {
+		this.logger = 
+	}
 	event.Bus.AddListener(this)
 	go this._distribute()
 }
 func (this *DistributedItemService) GetName() string {
 	return "DistributedItem"
 }
-func (this *DistributedItemService) Stop() {
+func (this *DistributedItemService) Stop(aBundleContext osgi.BundleContext) {
 	event.Bus.RemoveListener(this)
 }
