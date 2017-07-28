@@ -7,6 +7,7 @@ import (
 	"log"
 	"github.com/milak/mmqapi/conf"
 	"github.com/milak/tools/osgi"
+	"github.com/milak/tools/osgi/service"
 	"net"
 )
 /**
@@ -48,8 +49,9 @@ type InstancePool struct {
 }
 func NewInstancePool(aContext osgi.BundleContext) *InstancePool {
 	result := &InstancePool{context : aContext}
+	// Looking for log service
+	result.logger := aContext.GetService("LogService").Get().(service.LogService).GetLogger()
 	result.protocol 		= NewProtocol(aContext,result)
-	result.logger 			= aContext.GetLogger()
 	result.connections 		= make(map[string]*instanceConnection)
 	result.instancesByGroup = make(map[string][]*instanceConnection)
 	configuration := aContext.GetProperty("configuration").(*conf.Configuration)
