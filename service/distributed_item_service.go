@@ -4,7 +4,7 @@ import (
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/math"
 	"github.com/milak/tools/osgi"
-	"github.com/milak/tools/osgi/service"
+	osgiservice "github.com/milak/tools/osgi/service"
 	"github.com/milak/tools/logutil"
 	"log"
 	"math/rand"
@@ -348,7 +348,7 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 }
 func (this *DistributedItemService) Start(aBundleContext osgi.BundleContext) {
 	this.context = aBundleContext
-	this.logger := aBundleContext.GetService("LogService").Get().(*service.LogService).GetLogger()
+	this.logger := aBundleContext.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
 	event.Bus.AddListener(this)
 	go this._distribute()
 }
