@@ -32,7 +32,7 @@ func createServices(framework *osgi.Framework ,context *env.Context, store *item
 	s.Start(bundleContext)
 	s = dist.NewListener(bundleContext,pool)
 	s.Start(bundleContext)
-	s = service.NewAutoCleanService(bundleContext,store)
+	s = service.NewAutoCleanService(store)
 	s.Start(bundleContext)
 }
 func startServices(){
