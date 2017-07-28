@@ -20,7 +20,7 @@ type Listener struct {
 }
 func NewListener(aContext osgi.BundleContext, aPool *InstancePool) *Listener {
 	logServiceRef := aContext.GetService("LogService")
-	logger := logServiceRef.Get().(*LogService).GetLogger()
+	logger := logServiceRef.Get().(*service.LogService).GetLogger()
 	return &Listener{context : aContext, pool : aPool, running : true, protocol : NewProtocol(aContext,aPool), logger : logger}
 }
 func (this *Listener) Start(aBundleContext osgi.BundleContext){
