@@ -6,7 +6,7 @@ import (
 	"github.com/milak/mmq/dist"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/osgi"
-	"github.com/milak/tools/osgi/service"
+	osgiservice "github.com/milak/tools/osgi/service"
 	"github.com/milak/tools/logutil"
 //	"reflect"
 	"time"
@@ -36,13 +36,7 @@ func NewSyncService (aInstancePool *dist.InstancePool) *SyncService {
 }
 func (this *SyncService) Start (aBundleContext osgi.BundleContext){
 	this.context = aBundleContext
-	logServiceRef := this.context.GetService("LogService")
-	if logServiceRef == nil {
-		this.logger = logutil.DefaultLogger
-	} else {
-		logService = logServiceRef.Get().(LogService)
-		this.logger = logService.GetLogger()
-	}
+	this.logger = this.context.GetService("LogService").Get().(*osgiservice.LogService)
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]
