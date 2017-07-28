@@ -5,7 +5,6 @@ import (
 	"github.com/milak/tools/math"
 	"github.com/milak/tools/osgi"
 	osgiservice "github.com/milak/tools/osgi/service"
-	"github.com/milak/tools/logutil"
 	"log"
 	"math/rand"
 	"github.com/milak/mmqapi/conf"
