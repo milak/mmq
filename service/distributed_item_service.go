@@ -40,9 +40,9 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
 	case *item.ItemAdded:
 		if e.Topic.IsDistributed() {
 			distributionPolicy := e.Topic.GetParameterByName(conf.PARAMETER_DISTRIBUTED)
-			this.context.Logger.Println("DEBUG Received new distributed item. Policy :", distributionPolicy)
+			this.logger.Println("DEBUG Received new distributed item. Policy :", distributionPolicy)
 			if distributionPolicy == "0" || distributionPolicy == "1" || distributionPolicy == "" {
-				this.context.Logger.Println("DEBUG No need to distribute : distributionPolicy == '" + distributionPolicy + "'")
+				this.logger.Println("DEBUG No need to distribute : distributionPolicy == '" + distributionPolicy + "'")
 				return
 			}
 			groups := e.Topic.GetParameterByName(conf.PARAMETER_DISTRIBUTED_GROUPS)
@@ -63,7 +63,7 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
 		if !e.Item.IsShared() {
 			return
 		}
-		this.context.Logger.Println("DEBUG shared item removed", e.Item)
+		this.logger.Println("DEBUG shared item removed", e.Item)
 		sharedItem := this.sharedItems[e.Item.ID]
 		if sharedItem == nil {
 			// TODO see whether it is normal, what to do ?
@@ -73,10 +73,10 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
 		for _, i := range sharedItem.Instances {
 			instanceConnection := this.pool.GetInstanceByName(i)
 			if instanceConnection != nil {
-				this.context.Logger.Println("DEBUG Saying it to", i)
+				this.logger.Println("DEBUG Saying it to", i)
 				instanceConnection.SendRemoveItem(e.Item.ID)
 			} else {
-				this.context.Logger.Println("WARNING unable to get connection to ", i)
+				this.logger.Println("WARNING unable to get connection to ", i)
 			}
 		}
 	case *dist.ItemReceived:
@@ -248,24 +248,24 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 	nbInstances := len(retainedInstances)
 	if nbInstances == 0 {
 		if this._iterationBeforeLogging == 0 {
-			this.context.Logger.Println("WARNING Unable to apply distribution : no suitable connected instances")
+			this.logger.Println("WARNING Unable to apply distribution : no suitable connected instances")
 		}
 		return
 	}
-	//this.context.Logger.Println("I am connected with :", nbInstances, "instances, retained : ", retainedInstances)
+	//this.logger.Println("I am connected with :", nbInstances, "instances, retained : ", retainedInstances)
 	nbInstances++ // on ajoute l'instance courante en plus
 	count,err := this._computeCount(aSharedItem.Policy, nbInstances)
 	if err != nil {
 		if this._iterationBeforeLogging == 0 {
-			this.context.Logger.Println("WARNING Unable to apply distribution : ", aSharedItem.Policy, aSharedItem.Topic, err)
+			this.logger.Println("WARNING Unable to apply distribution : ", aSharedItem.Policy, aSharedItem.Topic, err)
 		}
 		return
 	}
-	//this.context.Logger.Println("The item must be distributed with :", count, " instances (including me)")
+	//this.logger.Println("The item must be distributed with :", count, " instances (including me)")
 	count-- // removing myself
 	// Do we have enougth ?
 	if len(aSharedItem.Instances) >= count {
-		//this.context.Logger.Println("I have enougth ",len(aSharedItem.Instances))
+		//this.logger.Println("I have enougth ",len(aSharedItem.Instances))
 		return // ok, nothing to do
 	}
 	// Let's remove allready owning instances from retainedInstances
@@ -286,47 +286,47 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 	// How much to add ?
 	count = count - len(aSharedItem.Instances)
 	if this._iterationBeforeLogging == 0 {
-		this.context.Logger.Println("DEBUG I need :", count, " more instances to share with me")
+		this.logger.Println("DEBUG I need :", count, " more instances to share with me")
 	}
 	if count > len(retainedInstances) {
 		count = len(retainedInstances)
 	}
-	this.context.Logger.Println("DEBUG I will take ",count, "instances in", len(retainedInstances)," available instances")
+	this.logger.Println("DEBUG I will take ",count, "instances in", len(retainedInstances)," available instances")
 	// distribute item to other instances
 	// let's randomly permut 
 	now := time.Now()
 	rand.Seed(int64(now.Nanosecond()))
 	ids := rand.Perm(len(retainedInstances))
-	this.context.Logger.Println("DEBUG ids",ids)
+	this.logger.Println("DEBUG ids",ids)
 	// let's select the instances
 	newInstance := make(map[string]bool)
 	for count > 0 {
 		id := ids[count-1]
-		this.context.Logger.Println("DEBUG id",id)
+		this.logger.Println("DEBUG id",id)
 		i := retainedInstances[id]
-		this.context.Logger.Println("DEBUG Selected", i)
+		this.logger.Println("DEBUG Selected", i)
 		newInstance[i.Name()]=true
 		aSharedItem.AddInstance(i.Name())
 		count--
 	}
 	if count > 0 {
 		if this._iterationBeforeLogging == 0 {
-			this.context.Logger.Println("WARNING I am missing :", count, " more instances")
+			this.logger.Println("WARNING I am missing :", count, " more instances")
 		}
 	}
 	// Let's share the item
 	for _, i := range aSharedItem.Instances {
 		instanceConnection := this.pool.GetInstanceByName(i)
 		if instanceConnection != nil {
-			//this.context.Logger.Println("Distributing with", i)
+			//this.logger.Println("Distributing with", i)
 			instanceConnection.SendItem(aSharedItem)
 			// Need to send the content ?
 			if _,isNew := newInstance[i]; isNew {
-				//this.context.Logger.Println("Not yet shared with him ", i)
+				//this.logger.Println("Not yet shared with him ", i)
 				bytes := make([]byte, 2000)
 				reader, err := this.store.GetContent(aSharedItem.Item.ID, false)
 				if err != nil {
-					this.context.Logger.Println("WARNING I can't find the content of an item ", aSharedItem.Item.ID)
+					this.logger.Println("WARNING I can't find the content of an item ", aSharedItem.Item.ID)
 					continue
 				}
 				count, _ := reader.Read(bytes)
@@ -340,7 +340,7 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 			}
 		} else {
 			if this._iterationBeforeLogging == 0 {
-				this.context.Logger.Println("WARNING unable to get connection to ", i)
+				this.logger.Println("WARNING unable to get connection to ", i)
 			}
 		}
 	}
