@@ -50,7 +50,8 @@ type InstancePool struct {
 func NewInstancePool(aContext osgi.BundleContext) *InstancePool {
 	result := &InstancePool{context : aContext}
 	// Looking for log service
-	result.logger = aContext.GetService("LogService").Get().(service.LogService).GetLogger()
+	logServiceRef := aContext.GetService("LogService")
+	result.logger = logServiceRef.Get().(*service.LogService).GetLogger()
 	result.protocol 		= NewProtocol(aContext,result)
 	result.connections 		= make(map[string]*instanceConnection)
 	result.instancesByGroup = make(map[string][]*instanceConnection)
