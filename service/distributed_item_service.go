@@ -346,7 +346,7 @@ func (this *DistributedItemService) _distributeItem(aSharedItem *dist.SharedItem
 }
 func (this *DistributedItemService) Start(aBundleContext osgi.BundleContext) {
 	this.context = aBundleContext
-	this.logger := aBundleContext.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
+	this.logger = aBundleContext.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
 	event.Bus.AddListener(this)
 	go this._distribute()
 }
