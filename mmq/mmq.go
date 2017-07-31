@@ -10,7 +10,7 @@ import (
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
-    osgiservice "github.com/milak/tools/osgi/service"
+   // osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
     "os"
     "strings"
@@ -74,7 +74,7 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins")
-    var logService osgiservice.LogService
+    /*var logService osgiservice.LogService
     file, err := os.Create("mmq.log")
 	if err != nil {
 		logService = osgiservice.NewDefaultLogService()
@@ -83,8 +83,8 @@ func main() {
 	} else {
 		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
 	}
-    framework.RegisterService("LogService",&logService)
-    framework.SetProperty("configuration",configuration)
+    framework.RegisterService("LogService",&logService)*/
+    framework.SetProperty("Configuration",configuration)
     host,_ := network.GetLocalIP()
     framework.SetProperty("Host",host)
     framework.SetProperty("InstanceName",context.InstanceName)
