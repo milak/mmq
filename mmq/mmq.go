@@ -3,7 +3,7 @@ package main
 import (
     "flag"
     "fmt"
-    "log"
+   // "log"
     "github.com/milak/mmqapi/env"
     "github.com/milak/mmqapi/conf"
     "github.com/milak/mmq/service"
@@ -12,7 +12,7 @@ import (
     "github.com/milak/tools/osgi"
    // osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
-    "os"
+   // "os"
     "strings"
     "time"
 )
