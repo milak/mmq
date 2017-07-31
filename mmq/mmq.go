@@ -9,7 +9,7 @@ import (
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
-    //osgiservice "github.com/milak/tools/osgi/service"
+    osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
     "os"
     "strings"
@@ -73,7 +73,7 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins")
-    var logService service.LogService
+    var logService osgiservice.LogService
     file, err := os.Create("mmq.log")
 	if err != nil {
 		logService = service.NewDefaultLogService()
