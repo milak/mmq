@@ -105,7 +105,7 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
 		}
 	case *dist.InstanceDisconnected:
 		configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
-		me := this.context.InstanceName
+		me := this.context.GetProperty("InstanceName").(string)
 		this.logger.Println("DEBUG Instance disconnected ", e.Instance.Name())
 		// Maybe this instance shared items
 		sharedItems := this.receivedItemsByInstance[e.Instance.Name()]
