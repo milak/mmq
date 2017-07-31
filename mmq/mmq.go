@@ -74,7 +74,7 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins")
-    var logService osgiservice.LogService
+    var logService *osgiservice.LogService
     file, err := os.Create("mmq.log")
 	if err != nil {
 		logService = osgiservice.NewDefaultLogService()
