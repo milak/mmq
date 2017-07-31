@@ -25,15 +25,15 @@ func createServices(framework *osgi.Framework ,context *env.Context, store *item
 	
 	s := service.NewDistributedItemService(pool,store)
 	s.Start(bundleContext)
-	s = service.NewHttpRestService(context,store)
-	s.Start(bundleContext)
+	s2 := service.NewHttpRestService(context,store)
+	s2.Start(bundleContext)
 	//result = append(result,service.NewHttpService(context,store))
-	s = service.NewSyncService(pool)
-	s.Start(bundleContext)
-	s = dist.NewListener(bundleContext,pool)
-	s.Start(bundleContext)
-	s = service.NewAutoCleanService(store)
-	s.Start(bundleContext)
+	s3 := service.NewSyncService(pool)
+	s3.Start(bundleContext)
+	s4 := dist.NewListener(bundleContext,pool)
+	s4.Start(bundleContext)
+	s5 := service.NewAutoCleanService(store)
+	s5.Start(bundleContext)
 }
 func startServices(){
 	for _,service := range framework.GetServices() {
