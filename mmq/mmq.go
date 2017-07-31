@@ -81,7 +81,7 @@ func main() {
 		logger := logService.GetLogger()
 		logger.Println("WARNING Unable to open file mmq.log")
 	} else {
-		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
+		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile, osgiservice.INFO)
 	}
     framework.RegisterService("LogService",&logService)
     framework.SetProperty("Configuration",configuration)
