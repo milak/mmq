@@ -180,7 +180,7 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
  * Ensures items are sufficently shared according to policy
  */
 func (this *DistributedItemService) _distribute() {
-	for this.context.GetState() == osgi.ACTIVE {
+	for this.context.GetBundle().GetState() == osgi.ACTIVE {
 		time.Sleep(1 * time.Second)
 		this._iterationBeforeLogging--
 		for _, sharedItem := range this.sharedItems {
