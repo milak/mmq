@@ -9,7 +9,7 @@ import (
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
-    osgiservice "github.com/milak/tools/osgi/service"
+    //osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
     "os"
     "strings"
