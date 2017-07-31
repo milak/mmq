@@ -3,6 +3,7 @@ package main
 import (
     "flag"
     "fmt"
+    "log"
     "github.com/milak/mmqapi/env"
     "github.com/milak/mmqapi/conf"
     "github.com/milak/mmq/service"
@@ -80,7 +81,7 @@ func main() {
 		logger := logService.GetLogger()
 		logger.Println("WARNING Unable to open file mmq.log")
 	} else {
-		logService = service.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
+		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
 	}
     framework.RegisterService("LogService",&logService)
     framework.SetProperty("configuration",configuration)
