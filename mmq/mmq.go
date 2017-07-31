@@ -84,7 +84,7 @@ func main() {
 	} else {
 		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile, logutil.INFO)
 	}
-    framework.RegisterService("LogService",&logService)
+    framework.RegisterService("LogService",logService)
     framework.SetProperty("Configuration",configuration)
     host,_ := network.GetLocalIP()
     framework.SetProperty("Host",host)
