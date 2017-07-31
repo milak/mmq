@@ -251,7 +251,7 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
  */
 func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) {
 	host,_,_ := net.SplitHostPort(aConn.LocalAddr().String())
-	this.context.SetProperty("host",host)
+	this.context.SetProperty("Host",host)
 	this.logger.Println("DEBUG Processing call")
 	buffer := make([]byte,1000)
 	count,err := aConn.Read(buffer)
@@ -305,7 +305,7 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 }
 func (this *protocol) _prepareInfo() []byte {
 	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
-	info := currentInstanceInformation{Host : this.context.GetProperty("host").(string), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
+	info := currentInstanceInformation{Host : this.context.GetProperty("Host").(string), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
 	encoder.Encode(info)

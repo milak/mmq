@@ -84,7 +84,8 @@ func main() {
     framework.RegisterService("LogService",&logService)
     framework.SetProperty("configuration",configuration)
     host,_ := network.GetLocalIP()
-    framework.SetProperty("host",host)
+    framework.SetProperty("Host",host)
+    framework.SetProperty("InstanceName",context.InstanceName)
     framework.Start()
     
 	pool 	:= dist.NewInstancePool(framework.GetBundleContext())  
