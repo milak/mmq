@@ -3,16 +3,16 @@ package main
 import (
     "flag"
     "fmt"
-   // "log"
+    "log"
     "github.com/milak/mmqapi/env"
     "github.com/milak/mmqapi/conf"
     "github.com/milak/mmq/service"
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
     "github.com/milak/tools/osgi"
-   // osgiservice "github.com/milak/tools/osgi/service"
+    osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
-   // "os"
+    "os"
     "strings"
     "time"
 )
@@ -74,9 +74,9 @@ func main() {
         fmt.Println("Version:"/**, configuration.Version*/)
     }
     framework = osgi.NewFramework("plugins")
-    /*var logService osgiservice.LogService
+    var logService osgiservice.LogService
     file, err := os.Create("mmq.log")
-	if err != nil {
+	/*if err != nil {
 		logService = osgiservice.NewDefaultLogService()
 		logger := logService.GetLogger()
 		logger.Println("WARNING Unable to open file mmq.log")
