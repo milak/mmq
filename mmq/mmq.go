@@ -77,9 +77,9 @@ func main() {
     var logService osgiservice.LogService
     file, err := os.Create("mmq.log")
 	if err != nil {
-	//	logService = osgiservice.NewDefaultLogService()
-	//	logger := logService.GetLogger()
-	//	logger.Println("WARNING Unable to open file mmq.log")
+		logService = osgiservice.NewDefaultLogService()
+		logger := logService.GetLogger()
+		logger.Println("WARNING Unable to open file mmq.log")
 	} else {
 		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile)
 	}
