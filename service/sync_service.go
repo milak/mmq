@@ -35,7 +35,7 @@ func NewSyncService (aInstancePool *dist.InstancePool) *SyncService {
 func (this *SyncService) Start (aBundleContext osgi.BundleContext){
 	this.context = aBundleContext
 	this.logger = this.context.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	for s := range configuration.Services {
 		service := configuration.Services[s]
 		if !service.Active {
@@ -55,7 +55,7 @@ func (this *SyncService) Start (aBundleContext osgi.BundleContext){
 }
 // Catch events
 func (this *SyncService) Event(aEvent interface{}) {
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	switch e:= aEvent.(type) {
 		case *conf.InstanceRemoved :
 			instanceConnection := this.pool.GetInstanceByName(e.Instance.Name())
@@ -89,7 +89,7 @@ func (this *SyncService) Event(aEvent interface{}) {
  * Scan not connected Instances and try to Connect
  */
 func (this *SyncService) scanInstances() {
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	const SAY_IT = 0
 	const WAIT_FOR = 100
 	timeBeforeSaying := SAY_IT

@@ -104,13 +104,14 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
 			this.logger.Println(i)
 		}
 	case *dist.InstanceDisconnected:
+		configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 		me := this.context.InstanceName
 		this.logger.Println("DEBUG Instance disconnected ", e.Instance.Name())
 		// Maybe this instance shared items
 		sharedItems := this.receivedItemsByInstance[e.Instance.Name()]
 		if sharedItems != nil && len(sharedItems) != 0 {
 			for _, sharedItem := range sharedItems {
-				topic := this.context.Configuration.GetTopic(sharedItem.Topic)
+				topic := configuration.GetTopic(sharedItem.Topic)
 				if topic == nil {
 					this.logger.Println("WARNING a shared item is stored in unknown topic", sharedItem.Topic)
 					continue
@@ -179,7 +180,7 @@ func (this *DistributedItemService) Event(aEvent interface{}) {
  * Ensures items are sufficently shared according to policy
  */
 func (this *DistributedItemService) _distribute() {
-	for this.context.Running {
+	for this.context.GetState() == osgi.ACTIVE {
 		time.Sleep(1 * time.Second)
 		this._iterationBeforeLogging--
 		for _, sharedItem := range this.sharedItems {
@@ -191,8 +192,9 @@ func (this *DistributedItemService) _distribute() {
 	}
 }
 func (this *DistributedItemService) _filterInstances(aGroups string) []*conf.Instance {
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	var retainedInstances []*conf.Instance
-	for _, i := range this.context.Configuration.Instances {
+	for _, i := range configuration.Instances {
 		if i.Connected {
 			retained := false
 			for _, g := range i.Groups {

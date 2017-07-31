@@ -32,7 +32,7 @@ const DIEZE byte = byte('#')
 func NewProtocol(aContext osgi.BundleContext, aConnectionFactory connectionFactory) *protocol {
 	logger := aContext.GetService("LogService").Get().(*service.LogService).GetLogger()
 	result := &protocol{context : aContext, logger : logger, connectionFactory : aConnectionFactory}
-	configuration := aContext.GetProperty("configuration").(*conf.Configuration)
+	configuration := aContext.GetProperty("Configuration").(*conf.Configuration)
 	for _,service := range configuration.Services {
 		if service.Name == conf.SERVICE_SYNC {
 			for _,parameter := range service.Parameters {
@@ -230,7 +230,7 @@ func (this *protocol) _sendConfiguration(aConnection *net.Conn){
 	//this.logger.Println("Sending configuration")
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	encoder.Encode(configuration.Instances)
 	this.sendCommand("INSTANCES",buffer.Bytes(),*aConnection)
 	buffer.Reset()
@@ -304,7 +304,7 @@ func (this *protocol) handleConnection (aConn net.Conn) (*conf.Instance, error) 
 	// TODO : gerer le fait que les deux peuvent essayer de se connecter en même temps, il y aura alors deux connections entre eux
 }
 func (this *protocol) _prepareInfo() []byte {
-	configuration := this.context.GetProperty("configuration").(*conf.Configuration)
+	configuration := this.context.GetProperty("Configuration").(*conf.Configuration)
 	info := currentInstanceInformation{Host : this.context.GetProperty("Host").(string), Port : this.port, Version : configuration.Version, Groups : configuration.Groups}
 	var buffer bytes.Buffer
 	encoder := json.NewEncoder(&buffer)
