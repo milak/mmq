@@ -28,7 +28,8 @@ func NewAutoCleanService(aStore *item.ItemStore) *AutoCleanService {
  * Start the service
  */
 func (this *AutoCleanService) Start(aBundleContext osgi.BundleContext){
-	this.logger =  aBundleContext.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
+	this.context = aBundleContext
+	this.logger =  this.context.GetService("LogService").Get().(*osgiservice.LogService).GetLogger()
 	if !this.running {
 		this.running = true
 		go this.run()
