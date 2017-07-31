@@ -9,6 +9,7 @@ import (
 	"github.com/milak/tools/data"
 	"github.com/milak/tools/event"
 	"github.com/milak/tools/network"
+	"github.com/milak/tools/osgi"
 	"github.com/google/uuid"
 	"io"
 	"net/http"
@@ -565,7 +566,7 @@ type DisplayableItem struct {
 	Properties []data.Property
 }
 
-func (this *HttpRestService) Start() {
+func (this *HttpRestService) Start(aBundleContext osgi.BundleContext) {
 	var port *string = nil
 	for s := range this.context.Configuration.Services {
 		service := this.context.Configuration.Services[s]
@@ -627,5 +628,5 @@ func (this *HttpRestService) Start() {
 func (this *HttpRestService) GetName() string {
 	return "REST"
 }
-func (this *HttpRestService) Stop() {
+func (this *HttpRestService) Stop(aBundleContext osgi.BundleContext) {
 }

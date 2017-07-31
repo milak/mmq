@@ -36,9 +36,9 @@ func createServices(framework *osgi.Framework ,context *env.Context, store *item
 	s5.Start(bundleContext)
 }
 func startServices(){
-	for _,service := range framework.GetServices() {
+	/*for _,service := range framework.GetServices() {
 		service.Start()
-	}
+	}*/
 }
 func main() {
 	flag.Parse() // Scan the arguments list
