@@ -9,6 +9,7 @@ import (
     "github.com/milak/mmq/service"
     "github.com/milak/mmq/item"
     "github.com/milak/mmq/dist"
+    "github.com/milak/tools/logutil"
     "github.com/milak/tools/osgi"
     osgiservice "github.com/milak/tools/osgi/service"
     "github.com/milak/tools/network"
@@ -81,7 +82,7 @@ func main() {
 		logger := logService.GetLogger()
 		logger.Println("WARNING Unable to open file mmq.log")
 	} else {
-		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile, osgiservice.INFO)
+		logService = osgiservice.NewLogService(file, "",  log.Ldate | log.Ltime | log.Lshortfile, logutil.INFO)
 	}
     framework.RegisterService("LogService",&logService)
     framework.SetProperty("Configuration",configuration)
