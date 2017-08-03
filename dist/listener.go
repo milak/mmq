@@ -79,7 +79,7 @@ func (this *Listener) doListen (aPort string) {
 		}
 	}
 }
-func (this *Listener) Stop() {
+func (this *Listener) Stop(aBundleContext osgi.BundleContext) {
 	this.running = false
 	if this.listener != nil {
 		this.listener.Close()
