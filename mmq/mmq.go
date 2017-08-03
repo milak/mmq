@@ -83,14 +83,17 @@ func main() {
     host,_ := network.GetLocalIP()
     framework.SetProperty("Host",host)
     framework.SetProperty("InstanceName",context.InstanceName)
-    framework.Start()
     
-	pool 	:= dist.NewInstancePool(framework.GetBundleContext())  
+    pool 	:= dist.NewInstancePool(framework.GetBundleContext())  
     store 	:= item.NewStore(context)
     
     framework.RegisterService("StoreService",store)
     
     createServices(framework,context,store,pool)
+    
+    framework.Start()
+    
+	
     fmt.Println("MMQ started")
     for context.Running {
     	time.Sleep(1000 * time.Millisecond)
