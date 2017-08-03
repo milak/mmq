@@ -352,7 +352,10 @@ func (this *DistributedItemService) Start(aBundleContext osgi.BundleContext) {
 	event.Bus.AddListener(this)
 	go this._distribute()
 }
-func (this *DistributedItemService) GetName() string {
+func (this *DistributedItemService) GetVersion() string {
+	return "1.0.0"
+}
+func (this *DistributedItemService) GetSymbolicName() string {
 	return "DistributedItem"
 }
 func (this *DistributedItemService) Stop(aBundleContext osgi.BundleContext) {

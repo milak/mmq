@@ -24,18 +24,12 @@ var linkOption *string = flag.String("l", "", "Link to a server to get the confi
 var configurationFileName *string = flag.String("f", "configuration.json", "The configuration file name")
 func createServices(framework *osgi.Framework ,context *env.Context, store *item.ItemStore, pool *dist.InstancePool) {
 	bundleContext := framework.GetBundleContext()
-	
-	s := service.NewDistributedItemService(pool,store)
-	s.Start(bundleContext)
-	s2 := service.NewHttpRestService(context,store)
-	s2.Start(bundleContext)
+	framework.RegisterBundle(service.NewDistributedItemService(pool,store))
+	framework.RegisterBundle(service.NewHttpRestService(context,store))
 	//result = append(result,service.NewHttpService(context,store))
-	s3 := service.NewSyncService(pool)
-	s3.Start(bundleContext)
-	s4 := dist.NewListener(bundleContext,pool)
-	s4.Start(bundleContext)
-	s5 := service.NewAutoCleanService(store)
-	s5.Start(bundleContext)
+	framework.RegisterBundle(service.NewSyncService(pool))
+	framework.RegisterBundle(service.NewListener(bundleContext,pool))
+	framework.RegisterBundle(service.NewAutoCleanService(store))
 }
 func startServices(){
 	/*for _,service := range framework.GetServices() {

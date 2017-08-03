@@ -625,7 +625,10 @@ func (this *HttpRestService) Start(aBundleContext osgi.BundleContext) {
 		go http.ListenAndServe(":"+this.port, nil)*/
 	}
 }
-func (this *HttpRestService) GetName() string {
+func (this *HttpRestService) GetVersion() string {
+	return "1.0.0"
+}
+func (this *HttpRestService) GetSymbolicName() string {
 	return "REST"
 }
 func (this *HttpRestService) Stop(aBundleContext osgi.BundleContext) {

@@ -35,7 +35,10 @@ func (this *AutoCleanService) Start(aBundleContext osgi.BundleContext){
 		go this.run()
 	}
 }
-func (this *AutoCleanService) GetName() string {
+func (this *AutoCleanService) GetVersion() string {
+	return "1.0.0"
+}
+func (this *AutoCleanService) GetSymbolicName() string {
 	return "AutoClean"
 }
 /**

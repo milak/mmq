@@ -117,7 +117,10 @@ func (this *SyncService) scanInstances() {
 		time.Sleep(2 * time.Second)
 	}
 }
-func (this *SyncService) GetName () string{
+func (this *SyncService) GetVersion() string {
+	return "1.0.0"
+}
+func (this *SyncService) GetSymbolicName() string {
 	return "SYNC"
 }
 func (this *SyncService) Stop (aBundleContext osgi.BundleContext){
