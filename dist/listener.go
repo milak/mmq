@@ -48,7 +48,10 @@ func (this *Listener) Start(aBundleContext osgi.BundleContext){
 		}
 	}
 }
-func (this *Listener) GetName() string {
+func (this *Listener) GetVersion() string {
+	return "1.0.0"
+}
+func (this *Listener) GetSymbolicName() string {
 	return "listener"
 }
 /**
